@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../services/news_service.dart';
+import '../widgets/robust_network_image.dart';
+import '../widgets/simple_network_image.dart';
+import '../widgets/reliable_network_image.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -10,99 +15,64 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   String _selectedCategory = 'Semua';
   final TextEditingController _searchController = TextEditingController();
+  List<NewsItem> _news = [];
+  bool _isLoading = false;
+  bool _hasError = false;
+  String _errorMessage = '';
   
-  final List<String> _categories = [
-    'Semua',
-    'Pemberdayaan',
-    'Kesehatan',
-    'Pendidikan',
-    'Laporan',
-    'Pengumuman'
-  ];
+  final List<String> _categories = NewsService.getCategories();
 
-  // Mock data for news
-  final List<Map<String, dynamic>> _news = [
-    {
-      'id': 1,
-      'judul': 'Program Bantuan Sosial Terbaru 2024 Diluncurkan',
-      'slug': 'program-bantuan-sosial-terbaru-2024',
-      'konten': 'Pemerintah daerah meluncurkan program bantuan sosial baru untuk masyarakat kurang mampu. Program ini mencakup bantuan pendidikan, kesehatan, dan ekonomi...',
-      'kategori': 'Pengumuman',
-      'gambar_utama': 'https://via.placeholder.com/400x200',
-      'tanggal_publikasi': '2024-01-25',
-      'views': 1250,
-      'author': 'Admin Dinas Sosial',
-      'is_published': true,
-    },
-    {
-      'id': 2,
-      'judul': 'Pelatihan Keterampilan Gratis untuk Masyarakat',
-      'slug': 'pelatihan-keterampilan-gratis',
-      'konten': 'Dibuka pendaftaran pelatihan keterampilan gratis untuk meningkatkan kemampuan masyarakat dalam berbagai bidang seperti teknologi, kerajinan, dan wirausaha...',
-      'kategori': 'Pemberdayaan',
-      'gambar_utama': 'https://via.placeholder.com/400x200',
-      'tanggal_publikasi': '2024-01-23',
-      'views': 890,
-      'author': 'Tim Pemberdayaan',
-      'is_published': true,
-    },
-    {
-      'id': 3,
-      'judul': 'Posyandu Balita: Jadwal dan Layanan Kesehatan',
-      'slug': 'posyandu-balita-jadwal-layanan',
-      'konten': 'Informasi terbaru mengenai jadwal posyandu balita dan layanan kesehatan yang tersedia untuk ibu dan anak di seluruh wilayah...',
-      'kategori': 'Kesehatan',
-      'gambar_utama': 'https://via.placeholder.com/400x200',
-      'tanggal_publikasi': '2024-01-20',
-      'views': 567,
-      'author': 'Puskesmas Setempat',
-      'is_published': true,
-    },
-    {
-      'id': 4,
-      'judul': 'Laporan Penyaluran Bantuan Bulan Januari 2024',
-      'slug': 'laporan-penyaluran-bantuan-januari-2024',
-      'konten': 'Laporan lengkap penyaluran bantuan sosial bulan Januari 2024 yang telah disalurkan kepada 1,245 keluarga penerima manfaat...',
-      'kategori': 'Laporan',
-      'gambar_utama': 'https://via.placeholder.com/400x200',
-      'tanggal_publikasi': '2024-01-18',
-      'views': 432,
-      'author': 'Tim Monitoring',
-      'is_published': true,
-    },
-    {
-      'id': 5,
-      'judul': 'Beasiswa Pendidikan untuk Siswa Berprestasi',
-      'slug': 'beasiswa-pendidikan-siswa-berprestasi',
-      'konten': 'Program beasiswa pendidikan untuk siswa berprestasi dari keluarga tidak mampu. Pendaftaran dibuka hingga akhir bulan...',
-      'kategori': 'Pendidikan',
-      'gambar_utama': 'https://via.placeholder.com/400x200',
-      'tanggal_publikasi': '2024-01-15',
-      'views': 1089,
-      'author': 'Dinas Pendidikan',
-      'is_published': true,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadNews();
+  }
 
-  List<Map<String, dynamic>> get _filteredNews {
-    var filtered = _news.where((news) => news['is_published']).toList();
+  // Load news from API
+  Future<void> _loadNews() async {
+    print('=== Loading News ===');
+    print('Category: $_selectedCategory');
+    print('Search: ${_searchController.text}');
     
-    if (_selectedCategory != 'Semua') {
-      filtered = filtered.where((news) => 
-          news['kategori'] == _selectedCategory).toList();
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+
+    try {
+      final response = await NewsService.getPublishedNews(
+        kategori: _selectedCategory != 'Semua' ? _selectedCategory : null,
+        search: _searchController.text.isNotEmpty ? _searchController.text : null,
+      );
+
+      print('News Response: success=${response.success}, data_length=${response.data.length}');
+
+      if (response.success) {
+        setState(() {
+          _news = response.data;
+          _isLoading = false;
+        });
+        print('News loaded successfully: ${_news.length} items');
+      } else {
+        setState(() {
+          _hasError = true;
+          _errorMessage = response.message ?? 'Gagal memuat berita';
+          _isLoading = false;
+        });
+        print('News loading failed: ${response.message}');
+      }
+    } catch (e) {
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Terjadi kesalahan: $e';
+        _isLoading = false;
+      });
+      print('News loading exception: $e');
     }
-    
-    if (_searchController.text.isNotEmpty) {
-      final searchTerm = _searchController.text.toLowerCase();
-      filtered = filtered.where((news) =>
-          news['judul'].toLowerCase().contains(searchTerm) ||
-          news['konten'].toLowerCase().contains(searchTerm)).toList();
-    }
-    
-    // Sort by date (newest first)
-    filtered.sort((a, b) => b['tanggal_publikasi'].compareTo(a['tanggal_publikasi']));
-    
-    return filtered;
+  }
+
+  List<NewsItem> get _filteredNews {
+    return _news; // Filtering is now done by the API
   }
 
   @override
@@ -129,7 +99,12 @@ class _NewsScreenState extends State<NewsScreen> {
             child: TextField(
               controller: _searchController,
               onChanged: (value) {
-                setState(() {});
+                // Debounce search to avoid too many API calls
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (_searchController.text == value) {
+                    _loadNews();
+                  }
+                });
               },
               decoration: InputDecoration(
                 hintText: 'Cari berita...',
@@ -139,7 +114,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          setState(() {});
+                          _loadNews();
                         },
                       )
                     : null,
@@ -184,6 +159,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       setState(() {
                         _selectedCategory = category;
                       });
+                      _loadNews();
                     },
                     backgroundColor: Colors.grey[100],
                     selectedColor: const Color(0xFF667eea).withOpacity(0.2),
@@ -202,16 +178,23 @@ class _NewsScreenState extends State<NewsScreen> {
           
           // News List
           Expanded(
-            child: _filteredNews.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _filteredNews.length,
-                    itemBuilder: (context, index) {
-                      final news = _filteredNews[index];
-                      return _buildNewsCard(news);
-                    },
-                  ),
+            child: _isLoading
+                ? _buildLoadingState()
+                : _hasError
+                    ? _buildErrorState()
+                    : _filteredNews.isEmpty
+                        ? _buildEmptyState()
+                        : RefreshIndicator(
+                            onRefresh: _loadNews,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: _filteredNews.length,
+                              itemBuilder: (context, index) {
+                                final news = _filteredNews[index];
+                                return _buildNewsCard(news);
+                              },
+                            ),
+                          ),
           ),
         ],
       ),
@@ -244,7 +227,7 @@ class _NewsScreenState extends State<NewsScreen> {
             TextButton(
               onPressed: () {
                 _searchController.clear();
-                setState(() {});
+                _loadNews();
               },
               child: const Text(
                 'Hapus pencarian',
@@ -254,12 +237,232 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
               ),
             ),
+          if (_searchController.text.isEmpty)
+            Column(
+              children: [
+                const SizedBox(height: 16),
+                Text(
+                  'Tips: Pastikan Anda terhubung ke internet\ndan server backend sedang berjalan',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[500],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: _loadNews,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF667eea),
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Muat Ulang'),
+                ),
+              ],
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildNewsCard(Map<String, dynamic> news) {
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Memuat berita...',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.cloud_off_outlined,
+              size: 80,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Tidak dapat memuat berita',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red.withOpacity(0.3)),
+              ),
+              child: Text(
+                _errorMessage,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.red[700],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (_errorMessage.contains('Connection refused') || _errorMessage.contains('terhubung'))
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Tips Troubleshooting:',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '• Pastikan Laravel backend berjalan di port 8000\n• Jalankan: php artisan serve --host=0.0.0.0\n• Pastikan menggunakan Android Emulator\n• Cek firewall/antivirus tidak memblokir',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.blue[600],
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _loadNews,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF667eea),
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Coba Lagi'),
+                ),
+                const SizedBox(width: 12),
+                TextButton.icon(
+                  onPressed: () {
+                    // Test connection
+                    _testConnection();
+                  },
+                  icon: const Icon(Icons.network_check),
+                  label: const Text('Test Koneksi'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: _testImageConnectivity,
+              icon: const Icon(Icons.image),
+              label: const Text('Test Gambar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _testConnection() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Testing koneksi ke server...'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    
+    try {
+      final response = await NewsService.getPublishedNews();
+      if (response.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Koneksi berhasil!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        _loadNews(); // Reload if connection is successful
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Koneksi gagal: ${response.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('❌ Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _testImageConnectivity() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Testing koneksi gambar...'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    
+    if (_news.isNotEmpty) {
+      // Test first news item with image
+      final firstNewsWithImage = _news.firstWhere(
+        (news) => news.gambarUtama != null && news.gambarUtama!.isNotEmpty,
+        orElse: () => _news.first,
+      );
+      
+      final testResult = await NewsService.testImageConnectivity(firstNewsWithImage.gambarUtama);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(testResult 
+            ? '✅ Gambar dapat diakses!' 
+            : '❌ Gambar tidak dapat diakses'),
+          backgroundColor: testResult ? Colors.green : Colors.red,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('❌ Tidak ada berita untuk ditest'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
+  }
+
+  Widget _buildNewsCard(NewsItem news) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -316,15 +519,61 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: _getCategoryColor(news['kategori']).withOpacity(0.9),
+                            color: Color(NewsService.getCategoryColor(news.kategori)).withOpacity(0.9),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            news['kategori'],
+                            news.kategori,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Real image or placeholder
+                      Positioned.fill(
+                        child: ReliableNetworkImage(
+                          imagePath: news.gambarUtama,
+                          fit: BoxFit.cover,
+                          placeholder: Container(
+                            color: const Color(0xFF667eea).withOpacity(0.1),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                              ),
+                            ),
+                          ),
+                          errorWidget: Container(
+                            color: const Color(0xFF667eea).withOpacity(0.1),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.broken_image_outlined,
+                                  size: 40,
+                                  color: Color(0xFF667eea),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Gambar tidak dapat dimuat',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Color(0xFF667eea),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  'Periksa koneksi server',
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.grey,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -342,7 +591,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   children: [
                     // Title
                     Text(
-                      news['judul'],
+                      news.judul,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -357,7 +606,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     
                     // Content preview
                     Text(
-                      news['konten'],
+                      news.excerpt ?? news.konten,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -379,7 +628,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          news['author'],
+                          news.author ?? 'Unknown',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -393,7 +642,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          _formatDate(news['tanggal_publikasi']),
+                          NewsService.formatDate(news.tanggalPublikasi),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -409,7 +658,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              news['views'].toString(),
+                              news.views.toString(),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],
@@ -429,40 +678,9 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'Pemberdayaan':
-        return const Color(0xFF4CAF50);
-      case 'Kesehatan':
-        return const Color(0xFF2196F3);
-      case 'Pendidikan':
-        return const Color(0xFFFF9800);
-      case 'Laporan':
-        return const Color(0xFF9C27B0);
-      case 'Pengumuman':
-        return const Color(0xFFF44336);
-      default:
-        return const Color(0xFF667eea);
-    }
-  }
 
-  String _formatDate(String dateString) {
-    final date = DateTime.parse(dateString);
-    final now = DateTime.now();
-    final difference = now.difference(date).inDays;
-    
-    if (difference == 0) {
-      return 'Hari ini';
-    } else if (difference == 1) {
-      return 'Kemarin';
-    } else if (difference < 7) {
-      return '$difference hari lalu';
-    } else {
-      return '${date.day}/${date.month}/${date.year}';
-    }
-  }
 
-  void _showNewsDetail(Map<String, dynamic> news) {
+  void _showNewsDetail(NewsItem news) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -473,7 +691,7 @@ class _NewsScreenState extends State<NewsScreen> {
 }
 
 class NewsDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> news;
+  final NewsItem news;
 
   const NewsDetailScreen({super.key, required this.news});
 
@@ -491,13 +709,46 @@ class NewsDetailScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: const Color(0xFF667eea).withOpacity(0.1),
-                child: const Center(
-                  child: Icon(
-                    Icons.image_outlined,
-                    size: 80,
-                    color: Color(0xFF667eea),
+              background: ReliableNetworkImage(
+                imagePath: news.gambarUtama,
+                fit: BoxFit.cover,
+                placeholder: Container(
+                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+                errorWidget: Container(
+                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.broken_image_outlined,
+                          size: 80,
+                          color: Color(0xFF667eea),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Gambar tidak dapat dimuat',
+                          style: TextStyle(
+                            color: Color(0xFF667eea),
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Periksa koneksi server',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -521,14 +772,14 @@ class NewsDetailScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _getCategoryColor(news['kategori']).withOpacity(0.1),
+                        color: Color(NewsService.getCategoryColor(news.kategori)).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        news['kategori'],
+                        news.kategori,
                         style: TextStyle(
                           fontSize: 14,
-                          color: _getCategoryColor(news['kategori']),
+                          color: Color(NewsService.getCategoryColor(news.kategori)),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -538,7 +789,7 @@ class NewsDetailScreen extends StatelessWidget {
                     
                     // Title
                     Text(
-                      news['judul'],
+                      news.judul,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -559,7 +810,7 @@ class NewsDetailScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          news['author'],
+                          news.author ?? 'Unknown',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -573,7 +824,7 @@ class NewsDetailScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          _formatDate(news['tanggal_publikasi']),
+                          NewsService.formatDate(news.tanggalPublikasi),
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -589,7 +840,7 @@ class NewsDetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              news['views'].toString(),
+                              news.views.toString(),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -608,7 +859,7 @@ class NewsDetailScreen extends StatelessWidget {
                     
                     // Content
                     Text(
-                      news['konten'],
+                      news.konten,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFF2D3748),
@@ -653,22 +904,6 @@ class NewsDetailScreen extends StatelessWidget {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'Pemberdayaan':
-        return const Color(0xFF4CAF50);
-      case 'Kesehatan':
-        return const Color(0xFF2196F3);
-      case 'Pendidikan':
-        return const Color(0xFFFF9800);
-      case 'Laporan':
-        return const Color(0xFF9C27B0);
-      case 'Pengumuman':
-        return const Color(0xFFF44336);
-      default:
-        return const Color(0xFF667eea);
-    }
-  }
 
   String _formatDate(String dateString) {
     final date = DateTime.parse(dateString);

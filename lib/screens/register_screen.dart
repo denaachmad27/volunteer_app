@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -70,33 +71,71 @@ class _RegisterScreenState extends State<RegisterScreen>
         _isLoading = true;
       });
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Account created successfully! Please sign in.'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+      try {
+        final response = await AuthService.register(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          passwordConfirmation: _confirmPasswordController.text,
+          phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
         );
-        
-        // Navigate to login
-        context.go('/login');
+
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          if (response.success) {
+            // Registration berhasil
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Registrasi berhasil! Selamat datang ${response.user?.name}'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+            
+            // Navigate to home (karena auto login setelah register)
+            context.go('/home');
+          } else {
+            // Registration gagal
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(response.message ?? 'Registrasi gagal'),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Terjadi kesalahan: $e'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
       }
     } else if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please agree to the Terms & Conditions'),
+          content: const Text('Harap setujui Syarat & Ketentuan'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -226,14 +265,17 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   // Full Name Field
                                   _buildTextField(
                                     controller: _nameController,
-                                    label: 'Full Name',
+                                    label: 'Nama Lengkap',
                                     icon: Icons.person_outline,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Full name is required';
+                                        return 'Nama lengkap wajib diisi';
                                       }
                                       if (value.length < 2) {
-                                        return 'Name must be at least 2 characters';
+                                        return 'Nama harus minimal 2 karakter';
+                                      }
+                                      if (value.length > 255) {
+                                        return 'Nama maksimal 255 karakter';
                                       }
                                       return null;
                                     },
@@ -248,10 +290,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     icon: Icons.email_outlined,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Email is required';
+                                        return 'Email wajib diisi';
                                       }
-                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                        return 'Enter a valid email';
+                                      if (!AuthService.isValidEmail(value)) {
+                                        return 'Format email tidak valid';
+                                      }
+                                      if (value.length > 255) {
+                                        return 'Email maksimal 255 karakter';
                                       }
                                       return null;
                                     },
@@ -262,15 +307,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   // Phone Field
                                   _buildTextField(
                                     controller: _phoneController,
-                                    label: 'Phone Number',
+                                    label: 'Nomor Telepon (Opsional)',
                                     icon: Icons.phone_outlined,
                                     keyboardType: TextInputType.phone,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Phone number is required';
-                                      }
-                                      if (value.length < 10) {
-                                        return 'Enter a valid phone number';
+                                      // Phone is optional, only validate if provided
+                                      if (value != null && value.isNotEmpty) {
+                                        if (value.length < 10 || value.length > 15) {
+                                          return 'Nomor telepon 10-15 digit';
+                                        }
+                                        if (!RegExp(r'^[0-9+\-\s]+$').hasMatch(value)) {
+                                          return 'Format nomor telepon tidak valid';
+                                        }
                                       }
                                       return null;
                                     },
@@ -281,7 +329,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   // Password Field
                                   _buildTextField(
                                     controller: _passwordController,
-                                    label: 'Password',
+                                    label: 'Kata Sandi',
                                     icon: Icons.lock_outline,
                                     isPassword: true,
                                     isPasswordVisible: _isPasswordVisible,
@@ -292,10 +340,22 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Password is required';
+                                        return 'Kata sandi wajib diisi';
                                       }
-                                      if (value.length < 6) {
-                                        return 'Password must be at least 6 characters';
+                                      if (value.length < 8) {
+                                        return 'Kata sandi minimal 8 karakter';
+                                      }
+                                      // Check for uppercase letter
+                                      if (!value.contains(RegExp(r'[A-Z]'))) {
+                                        return 'Kata sandi harus mengandung huruf besar';
+                                      }
+                                      // Check for lowercase letter
+                                      if (!value.contains(RegExp(r'[a-z]'))) {
+                                        return 'Kata sandi harus mengandung huruf kecil';
+                                      }
+                                      // Check for number
+                                      if (!value.contains(RegExp(r'[0-9]'))) {
+                                        return 'Kata sandi harus mengandung angka';
                                       }
                                       return null;
                                     },
@@ -306,7 +366,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   // Confirm Password Field
                                   _buildTextField(
                                     controller: _confirmPasswordController,
-                                    label: 'Confirm Password',
+                                    label: 'Konfirmasi Kata Sandi',
                                     icon: Icons.lock_outline,
                                     isPassword: true,
                                     isPasswordVisible: _isConfirmPasswordVisible,
@@ -317,10 +377,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please confirm your password';
+                                        return 'Konfirmasi kata sandi wajib diisi';
                                       }
                                       if (value != _passwordController.text) {
-                                        return 'Passwords do not match';
+                                        return 'Konfirmasi kata sandi tidak sesuai';
                                       }
                                       return null;
                                     },

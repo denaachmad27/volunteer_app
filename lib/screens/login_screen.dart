@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,14 +63,52 @@ class _LoginScreenState extends State<LoginScreen>
         _isLoading = true;
       });
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        final response = await AuthService.login(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
 
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        context.go('/home');
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          if (response.success) {
+            // Login berhasil
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Login berhasil! Selamat datang ${response.user?.name}'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            context.go('/home');
+          } else {
+            // Login gagal
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(response.message ?? 'Login gagal'),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Terjadi kesalahan: $e'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     }
   }
@@ -180,10 +219,10 @@ class _LoginScreenState extends State<LoginScreen>
                                     icon: Icons.email_outlined,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Email is required';
+                                        return 'Email wajib diisi';
                                       }
-                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                        return 'Enter a valid email';
+                                      if (!AuthService.isValidEmail(value)) {
+                                        return 'Format email tidak valid';
                                       }
                                       return null;
                                     },
@@ -194,15 +233,12 @@ class _LoginScreenState extends State<LoginScreen>
                                   // Password Field
                                   _buildTextField(
                                     controller: _passwordController,
-                                    label: 'Password',
+                                    label: 'Kata Sandi',
                                     icon: Icons.lock_outline,
                                     isPassword: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Password is required';
-                                      }
-                                      if (value.length < 6) {
-                                        return 'Password must be at least 6 characters';
+                                        return 'Kata sandi wajib diisi';
                                       }
                                       return null;
                                     },

@@ -15,6 +15,8 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _particleController;
   late Animation<double> _logoAnimation;
   late Animation<double> _fadeAnimation;
+  late double _screenWidth;
+  late double _screenHeight;
 
   @override
   void initState() {
@@ -69,6 +71,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -191,8 +196,8 @@ class _SplashScreenState extends State<SplashScreen>
   Widget _buildParticle(int index) {
     final random = (index * 137.5) % 1;
     final size = 2.0 + (random * 8);
-    final initialX = (index * 47.3) % MediaQuery.of(context).size.width;
-    final initialY = (index * 73.7) % MediaQuery.of(context).size.height;
+    final initialX = (index * 47.3) % _screenWidth;
+    final initialY = (index * 73.7) % _screenHeight;
 
     return AnimatedBuilder(
       animation: _particleController,
@@ -202,8 +207,8 @@ class _SplashScreenState extends State<SplashScreen>
         final y = initialY + (30 * animationValue);
         
         return Positioned(
-          left: x % MediaQuery.of(context).size.width,
-          top: y % MediaQuery.of(context).size.height,
+          left: x % _screenWidth,
+          top: y % _screenHeight,
           child: Container(
             width: size,
             height: size,

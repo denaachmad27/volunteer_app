@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../services/auth_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -12,6 +13,8 @@ class _SettingsScreenState extends State<SettingsScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  User? _currentUser;
+  bool _isLoading = true;
 
   // Settings values
   bool _notificationsEnabled = true;
@@ -36,7 +39,22 @@ class _SettingsScreenState extends State<SettingsScreen>
       curve: Curves.easeOut,
     ));
 
+    _loadUserData();
     _animationController.forward();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final user = await AuthService.getCurrentUser();
+      setState(() {
+        _currentUser = user;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -97,21 +115,25 @@ class _SettingsScreenState extends State<SettingsScreen>
                             ),
                           ),
                           const SizedBox(width: 16),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Volunteer User',
-                                  style: TextStyle(
+                                  _isLoading 
+                                      ? 'Loading...' 
+                                      : _currentUser?.name ?? 'Volunteer User',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  'volunteer@example.com',
-                                  style: TextStyle(
+                                  _isLoading 
+                                      ? 'Loading...' 
+                                      : _currentUser?.email ?? 'volunteer@example.com',
+                                  style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 14,
                                   ),
@@ -311,7 +333,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               width: double.infinity,
                               height: 50,
                               child: OutlinedButton.icon(
-                                onPressed: () => _showLogoutDialog(),
+                                onPressed: _handleLogout,
                                 icon: const Icon(Icons.logout_rounded),
                                 label: const Text('Keluar'),
                                 style: OutlinedButton.styleFrom(
@@ -602,6 +624,81 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   void _showTerms() {
     _showComingSoonDialog('Syarat & Ketentuan');
+  }
+
+  void _handleLogout() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Konfirmasi Logout',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF2D3748),
+          ),
+        ),
+        content: const Text(
+          'Apakah Anda yakin ingin keluar dari aplikasi?',
+          style: TextStyle(
+            color: Color(0xFF4A5568),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Batal',
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // Close dialog
+              
+              // Show loading
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+              
+              try {
+                await AuthService.logout();
+                if (mounted) {
+                  Navigator.pop(context); // Close loading
+                  context.go('/login');
+                }
+              } catch (e) {
+                if (mounted) {
+                  Navigator.pop(context); // Close loading
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Gagal logout: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showComingSoonDialog(String feature) {

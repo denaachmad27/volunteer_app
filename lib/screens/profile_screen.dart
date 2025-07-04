@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +13,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  User? _currentUser;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -29,7 +32,22 @@ class _ProfileScreenState extends State<ProfileScreen>
       curve: Curves.easeOut,
     ));
 
+    _loadUserData();
     _animationController.forward();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final user = await AuthService.getCurrentUser();
+      setState(() {
+        _currentUser = user;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -170,9 +188,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ],
                                   ),
                                   const SizedBox(height: 16),
-                                  const Text(
-                                    'Volunteer User',
-                                    style: TextStyle(
+                                  Text(
+                                    _isLoading 
+                                        ? 'Loading...' 
+                                        : _currentUser?.name ?? 'Volunteer User',
+                                    style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFF2D3748),
@@ -180,7 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'volunteer@example.com',
+                                    _isLoading 
+                                        ? 'Loading...' 
+                                        : _currentUser?.email ?? 'volunteer@example.com',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[600],
