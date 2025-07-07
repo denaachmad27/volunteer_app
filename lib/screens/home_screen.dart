@@ -387,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             _buildNewsCard(
                                               news: news,
                                               title: news.judul,
-                                              summary: news.excerpt ?? (news.konten.isNotEmpty ? news.konten.substring(0, news.konten.length > 120 ? 120 : news.konten.length) + '...' : ''),
+                                              summary: news.excerpt ?? (news.konten.isNotEmpty ? '${news.konten.substring(0, news.konten.length > 120 ? 120 : news.konten.length)}...' : ''),
                                               date: NewsService.formatDate(news.tanggalPublikasi),
                                               category: news.kategori,
                                               imageUrl: NewsService.getImageUrl(news.gambarUtama),

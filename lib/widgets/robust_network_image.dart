@@ -25,7 +25,7 @@ class RobustNetworkImage extends StatefulWidget {
 }
 
 class _RobustNetworkImageState extends State<RobustNetworkImage> {
-  int _currentUrlIndex = 0;
+  final int _currentUrlIndex = 0;
   bool _hasError = false;
   List<String> _urlsToTry = [];
 

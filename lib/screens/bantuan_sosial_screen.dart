@@ -1119,7 +1119,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
   Widget _buildApplicationFormSheet(Map<String, dynamic> program, {bool isResubmission = false, Map<String, dynamic>? existingApplication}) {
     final TextEditingController notesController = TextEditingController(
       text: isResubmission && existingApplication != null 
-        ? existingApplication!['alasan_pengajuan']?.toString() ?? ''
+        ? existingApplication['alasan_pengajuan']?.toString() ?? ''
         : ''
     );
     bool isSubmitting = false;
@@ -1245,17 +1245,17 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'ID Pengajuan: ${existingApplication!['id']}',
+                                'ID Pengajuan: ${existingApplication['id']}',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.orange[700],
                                 ),
                               ),
-                              if (existingApplication!['catatan_admin'] != null && 
-                                  existingApplication!['catatan_admin'].toString().isNotEmpty) ...[
+                              if (existingApplication['catatan_admin'] != null && 
+                                  existingApplication['catatan_admin'].toString().isNotEmpty) ...[
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Catatan Admin: ${existingApplication!['catatan_admin']}',
+                                  'Catatan Admin: ${existingApplication['catatan_admin']}',
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: Colors.orange[800],
@@ -1380,11 +1380,11 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                               
                               if (isResubmission && existingApplication != null) {
                                 print('=== Resubmitting application ===');
-                                print('Application ID: ${existingApplication!['id']}');
+                                print('Application ID: ${existingApplication['id']}');
                                 print('Alasan: ${notesController.text.trim()}');
                                 
                                 result = await BantuanSosialService.resubmitApplication(
-                                  applicationId: existingApplication!['id'],
+                                  applicationId: existingApplication['id'],
                                   catatanTambahan: notesController.text.trim(),
                                 );
                               } else {

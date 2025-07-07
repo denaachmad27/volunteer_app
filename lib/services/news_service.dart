@@ -164,7 +164,7 @@ class NewsResponse {
       if (newsData is List) {
         print('Processing simple list with ${newsData.length} items');
         // Simple list response
-        newsList = (newsData as List)
+        newsList = (newsData)
             .map((item) {
               print('Processing item: ${item.keys.toList()}');
               return NewsItem.fromJson(item);
@@ -178,7 +178,7 @@ class NewsResponse {
         final data = newsData['data'];
         if (data is List) {
           print('Found data list with ${data.length} items');
-          newsList = (data as List)
+          newsList = (data)
               .map((item) {
                 print('Processing paginated item: ${item.keys.toList()}');
                 return NewsItem.fromJson(item);

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../services/news_service.dart';
-import '../widgets/robust_network_image.dart';
-import '../widgets/simple_network_image.dart';
 import '../widgets/reliable_network_image.dart';
 
 class NewsScreen extends StatefulWidget {
