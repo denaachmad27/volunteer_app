@@ -5,6 +5,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   // Use 10.0.2.2:8000 for Android emulator (maps to host machine localhost)
   static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String storageUrl = 'http://10.0.2.2:8000/storage';
+  
+  // Helper method to get complete image URL
+  static String getImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) return '';
+    
+    String finalUrl;
+    // If imagePath already contains full path (complaint_images/filename.jpg)
+    if (imagePath.contains('complaint_images/')) {
+      finalUrl = '$storageUrl/$imagePath';
+    } else {
+      // If imagePath is just filename, add the directory
+      finalUrl = '$storageUrl/complaint_images/$imagePath';
+    }
+    
+    print('=== IMAGE URL DEBUG ===');
+    print('Input imagePath: $imagePath');
+    print('Final URL: $finalUrl');
+    print('=====================');
+    
+    return finalUrl;
+  }
   
   // Get stored token from SharedPreferences
   static Future<String?> getToken() async {

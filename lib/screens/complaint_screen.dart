@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/complaint_service.dart';
+import '../services/api_service.dart';
+import '../widgets/reliable_network_image.dart';
 import 'complaint_detail_screen.dart';
 
 class ComplaintScreen extends StatefulWidget {
@@ -543,14 +545,73 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                     
                     const SizedBox(height: 12),
                     
-                    // Title
-                    Text(
-                      complaint['judul'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3748),
-                      ),
+                    // Title and Image
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            complaint['judul'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF2D3748),
+                            ),
+                          ),
+                        ),
+                        // Image thumbnail
+                        if (complaint['image_path'] != null) ...[
+                          const SizedBox(width: 12),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: ReliableNetworkImage(
+                                imagePath: complaint['image_path'],
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                errorWidget: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.broken_image_outlined,
+                                    color: Colors.grey[400],
+                                    size: 20,
+                                  ),
+                                ),
+                                placeholder: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.grey[400]!,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     
                     const SizedBox(height: 8),
