@@ -5,8 +5,10 @@ import 'news_screen.dart';
 import 'complaint_screen.dart';
 import '../services/auth_service.dart';
 import '../services/news_service.dart';
+import '../services/profile_completion_service.dart';
 import '../widgets/robust_network_image.dart';
 import '../widgets/reliable_network_image.dart';
+import '../widgets/profile_completion_card.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(int)? onTabChange;
@@ -25,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isLoading = true;
   List<NewsItem> _latestNews = [];
   bool _newsLoading = true;
+  Map<String, dynamic>? _profileCompletion;
+  bool _profileCompletionLoading = true;
 
   @override
   void initState() {
@@ -44,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _loadUserData();
     _loadLatestNews();
+    _loadProfileCompletion();
     _animationController.forward();
     
     // Retry loading news after a short delay if needed
@@ -120,6 +125,23 @@ class _HomeScreenState extends State<HomeScreen>
       print('Stack trace: ${StackTrace.current}');
       setState(() {
         _newsLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadProfileCompletion() async {
+    try {
+      final completionData = await ProfileCompletionService.getProfileCompletionStatus();
+      final completion = ProfileCompletionService.calculateCompletion(completionData);
+      
+      setState(() {
+        _profileCompletion = completion;
+        _profileCompletionLoading = false;
+      });
+    } catch (e) {
+      print('Error loading profile completion: $e');
+      setState(() {
+        _profileCompletionLoading = false;
       });
     }
   }
@@ -264,6 +286,19 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                             
                             const SizedBox(height: 32),
+                            
+                            // Profile Completion Reminder
+                            if (!_profileCompletionLoading && _profileCompletion != null)
+                              ProfileCompletionCard(
+                                percentage: _profileCompletion!['percentage'],
+                                completedSections: _profileCompletion!['completed_sections'],
+                                totalSections: _profileCompletion!['total_sections'],
+                                nextStep: _profileCompletion!['next_step'],
+                                nextRoute: _profileCompletion!['next_route'],
+                                isComplete: _profileCompletion!['is_complete'],
+                                message: ProfileCompletionService.getCompletionMessage(_profileCompletion!['percentage']),
+                                onRefresh: _loadProfileCompletion,
+                              ),
                             
                             // Quick Actions
                             const Text(

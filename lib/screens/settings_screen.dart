@@ -197,6 +197,24 @@ class _SettingsScreenState extends State<SettingsScreen>
                             // Profile Section
                             _buildSectionTitle('Profil'),
                             _buildMenuItem(
+                              icon: Icons.assignment_ind_outlined,
+                              title: 'Lengkapi Profil',
+                              subtitle: 'Lengkapi data profil personal',
+                              onTap: () => context.push('/profil-personal'),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.family_restroom_outlined,
+                              title: 'Data Keluarga',
+                              subtitle: 'Kelola data anggota keluarga',
+                              onTap: () => context.push('/data-keluarga'),
+                            ),
+                            _buildMenuItem(
+                              icon: Icons.analytics_outlined,
+                              title: 'Data Ekonomi',
+                              subtitle: 'Kelola kondisi keuangan dan aset',
+                              onTap: () => context.push('/data-ekonomi'),
+                            ),
+                            _buildMenuItem(
                               icon: Icons.person_outline,
                               title: 'Edit Profil',
                               subtitle: 'Ubah informasi pribadi',

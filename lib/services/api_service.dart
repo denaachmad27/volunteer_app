@@ -123,6 +123,11 @@ class ApiService {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return responseBody;
     } else {
+      // Handle 404 Not Found with specific message
+      if (response.statusCode == 404) {
+        throw Exception('404: ${responseBody['message'] ?? 'Data not found'}');
+      }
+      
       // Handle validation errors (422)
       if (response.statusCode == 422 && responseBody['errors'] != null) {
         final errors = responseBody['errors'] as Map<String, dynamic>;
