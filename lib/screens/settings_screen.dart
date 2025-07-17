@@ -215,6 +215,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                               onTap: () => context.push('/data-ekonomi'),
                             ),
                             _buildMenuItem(
+                              icon: Icons.groups_outlined,
+                              title: 'Data Sosial',
+                              subtitle: 'Kelola aktivitas sosial dan kemasyarakatan',
+                              onTap: () => context.push('/data-sosial'),
+                            ),
+                            _buildMenuItem(
                               icon: Icons.person_outline,
                               title: 'Edit Profil',
                               subtitle: 'Ubah informasi pribadi',

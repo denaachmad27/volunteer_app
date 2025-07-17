@@ -168,43 +168,41 @@ class ProfileCompletionCard extends StatelessWidget {
             ),
           ),
           
-          if (!isComplete) ...[
-            const SizedBox(height: 20),
-            
-            // Action Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => context.push(nextRoute),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors['primary'],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+          const SizedBox(height: 20),
+          
+          // Action Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => context.push(isComplete ? '/profil-personal' : nextRoute),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors['primary'],
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    isComplete ? Icons.settings : Icons.arrow_forward,
+                    size: 18,
                   ),
-                  elevation: 0,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.arrow_forward,
-                      size: 18,
+                  const SizedBox(width: 8),
+                  Text(
+                    isComplete ? 'Kelola Profil' : 'Lanjutkan: $nextStep',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Lanjutkan: $nextStep',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ],
       ),
     );

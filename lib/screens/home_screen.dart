@@ -6,6 +6,7 @@ import 'complaint_screen.dart';
 import '../services/auth_service.dart';
 import '../services/news_service.dart';
 import '../services/profile_completion_service.dart';
+import '../services/profile_service.dart';
 import '../widgets/robust_network_image.dart';
 import '../widgets/reliable_network_image.dart';
 import '../widgets/profile_completion_card.dart';
@@ -29,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen>
   bool _newsLoading = true;
   Map<String, dynamic>? _profileCompletion;
   bool _profileCompletionLoading = true;
+  Map<String, dynamic>? _profileData;
+  bool _profileDataLoading = true;
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen>
     _loadUserData();
     _loadLatestNews();
     _loadProfileCompletion();
+    _loadProfileData();
     _animationController.forward();
     
     // Retry loading news after a short delay if needed
@@ -58,6 +62,16 @@ class _HomeScreenState extends State<HomeScreen>
         _loadLatestNews();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh profile completion when returning to home screen
+    if (mounted) {
+      _loadProfileCompletion();
+      _loadProfileData();
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -146,6 +160,21 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  Future<void> _loadProfileData() async {
+    try {
+      final profileData = await ProfileService.getProfile();
+      setState(() {
+        _profileData = profileData;
+        _profileDataLoading = false;
+      });
+    } catch (e) {
+      print('Error loading profile data: $e');
+      setState(() {
+        _profileDataLoading = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -200,11 +229,35 @@ class _HomeScreenState extends State<HomeScreen>
                             width: 1,
                           ),
                         ),
-                        child: const Icon(
-                          Icons.person_outline,
-                          color: Colors.white,
-                          size: 24,
-                        ),
+                        child: !_profileDataLoading && _profileData != null && _profileData!['foto_profil'] != null
+                            ? ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: ProfileService.getProfilePhotoUrl(_profileData!['foto_profil']),
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    width: 50,
+                                    height: 50,
+                                    color: Colors.white.withOpacity(0.2),
+                                    child: const Icon(
+                                      Icons.person_outline,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => const Icon(
+                                    Icons.person_outline,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              )
+                            : const Icon(
+                                Icons.person_outline,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(

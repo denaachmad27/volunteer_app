@@ -7,6 +7,7 @@ import 'screens/main_screen.dart';
 import 'screens/profil_personal_screen.dart';
 import 'screens/data_keluarga_screen.dart';
 import 'screens/data_ekonomi_screen.dart';
+import 'screens/data_sosial_screen.dart';
 
 void main() {
   runApp(VolunteerApp());
@@ -45,6 +46,10 @@ class VolunteerApp extends StatelessWidget {
       GoRoute(
         path: '/data-ekonomi',
         builder: (context, state) => const DataEkonomiScreen(),
+      ),
+      GoRoute(
+        path: '/data-sosial',
+        builder: (context, state) => const DataSosialScreen(),
       ),
     ],
   );

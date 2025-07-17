@@ -60,7 +60,7 @@ class ProfileCompletionService {
       nextRoute = '/data-ekonomi';
     } else if (!hasSocial) {
       nextStep = 'Data Sosial';
-      nextRoute = '/profil-personal'; // Temporary, will be updated when implemented
+      nextRoute = '/data-sosial';
     }
     
     return {
@@ -115,7 +115,7 @@ class ProfileCompletionService {
   // Get completion message
   static String getCompletionMessage(int percentage) {
     if (percentage >= 100) {
-      return 'Profil Anda sudah lengkap! Terima kasih telah melengkapi semua data.';
+      return 'Selamat! Profil Anda sudah lengkap dengan data personal, keluarga, ekonomi, dan sosial. Sekarang Anda dapat mengakses semua fitur aplikasi dan mengajukan bantuan sosial.';
     } else if (percentage >= 75) {
       return 'Profil hampir lengkap! Sedikit lagi untuk menyelesaikan semua data.';
     } else if (percentage >= 50) {
