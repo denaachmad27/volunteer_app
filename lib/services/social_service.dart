@@ -84,7 +84,7 @@ class SocialService {
         'ketersediaan_waktu': ketersediaanWaktu ?? 'Fleksibel',
       };
       
-      final response = await ApiService.post('/social/$id', data);
+      final response = await ApiService.post('/social', data);
       return ApiService.parseResponse(response);
     } catch (e) {
       print('Error updating social data: $e');

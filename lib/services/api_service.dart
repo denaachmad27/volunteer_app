@@ -115,6 +115,66 @@ class ApiService {
       throw Exception('Network error: $e');
     }
   }
+
+  // Generic PUT request
+  static Future<http.Response> put(String endpoint, Map<String, dynamic> data) async {
+    final headers = await getHeaders();
+    final uri = Uri.parse('$baseUrl$endpoint');
+    
+    // Debug logging
+    print('=== API PUT Request ===');
+    print('URL: $uri');
+    print('Headers: $headers');
+    print('Body: ${jsonEncode(data)}');
+    
+    try {
+      final response = await http.put(
+        uri,
+        headers: headers,
+        body: jsonEncode(data),
+      );
+      
+      // Debug response
+      print('=== API Response ===');
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+      
+      return response;
+    } catch (e) {
+      print('=== API Error ===');
+      print('Error: $e');
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Generic DELETE request
+  static Future<http.Response> delete(String endpoint) async {
+    final headers = await getHeaders();
+    final uri = Uri.parse('$baseUrl$endpoint');
+    
+    // Debug logging
+    print('=== API DELETE Request ===');
+    print('URL: $uri');
+    print('Headers: $headers');
+    
+    try {
+      final response = await http.delete(
+        uri,
+        headers: headers,
+      );
+      
+      // Debug response
+      print('=== API Response ===');
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+      
+      return response;
+    } catch (e) {
+      print('=== API Error ===');
+      print('Error: $e');
+      throw Exception('Network error: $e');
+    }
+  }
   
   // Parse JSON response
   static Map<String, dynamic> parseResponse(http.Response response) {

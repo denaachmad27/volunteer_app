@@ -72,7 +72,7 @@ class FamilyService {
         'tanggungan': tanggungan,
       };
       
-      final response = await ApiService.post('/family/$id', data);
+      final response = await ApiService.put('/family/$id', data);
       return ApiService.parseResponse(response);
     } catch (e) {
       print('Error updating family member: $e');
@@ -83,8 +83,7 @@ class FamilyService {
   // Delete family member
   static Future<Map<String, dynamic>> deleteFamilyMember(int id) async {
     try {
-      // Using POST with DELETE method since some APIs handle it this way
-      final response = await ApiService.post('/family/$id/delete', {});
+      final response = await ApiService.delete('/family/$id');
       return ApiService.parseResponse(response);
     } catch (e) {
       print('Error deleting family member: $e');

@@ -54,6 +54,15 @@ class _ProfilPersonalScreenState extends State<ProfilPersonalScreen>
     _loadExistingProfile();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh profile data when returning to this screen
+    if (mounted) {
+      _loadExistingProfile();
+    }
+  }
+
   void _initializeAnimations() {
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
@@ -85,6 +94,7 @@ class _ProfilPersonalScreenState extends State<ProfilPersonalScreen>
     try {
       final profile = await ProfileService.getProfile();
       if (profile != null && mounted) {
+        print('ProfilPersonal: Profile loaded with foto_profil: ${profile['foto_profil']}');
         _populateFormWithExistingData(profile);
       }
     } catch (e) {

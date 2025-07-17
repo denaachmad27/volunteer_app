@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../services/auth_service.dart';
+import '../services/profile_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,6 +17,8 @@ class _SettingsScreenState extends State<SettingsScreen>
   late Animation<double> _fadeAnimation;
   User? _currentUser;
   bool _isLoading = true;
+  Map<String, dynamic>? _profileData;
+  bool _profileDataLoading = true;
 
   // Settings values
   bool _notificationsEnabled = true;
@@ -40,6 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     ));
 
     _loadUserData();
+    _loadProfileData();
     _animationController.forward();
   }
 
@@ -53,6 +58,21 @@ class _SettingsScreenState extends State<SettingsScreen>
     } catch (e) {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadProfileData() async {
+    try {
+      final profileData = await ProfileService.getProfile();
+      setState(() {
+        _profileData = profileData;
+        _profileDataLoading = false;
+      });
+    } catch (e) {
+      print('Error loading profile data: $e');
+      setState(() {
+        _profileDataLoading = false;
       });
     }
   }
@@ -108,11 +128,43 @@ class _SettingsScreenState extends State<SettingsScreen>
                                 ),
                               ],
                             ),
-                            child: const Icon(
-                              Icons.person,
-                              color: Color(0xFF667eea),
-                              size: 30,
-                            ),
+                            child: !_profileDataLoading && _profileData != null && _profileData!['foto_profil'] != null
+                                ? ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl: ProfileService.getProfilePhotoUrl(_profileData!['foto_profil']),
+                                      width: 60,
+                                      height: 60,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.white,
+                                              Color(0xFFE3F2FD),
+                                            ],
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.person,
+                                          color: Color(0xFF667eea),
+                                          size: 30,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) => const Icon(
+                                        Icons.person,
+                                        color: Color(0xFF667eea),
+                                        size: 30,
+                                      ),
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.person,
+                                    color: Color(0xFF667eea),
+                                    size: 30,
+                                  ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(

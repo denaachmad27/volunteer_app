@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../services/profile_service.dart';
 
 class ProfilePhotoPicker extends StatefulWidget {
@@ -92,22 +93,22 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
         height: widget.size,
       );
     } else if (widget.currentPhotoUrl != null && widget.currentPhotoUrl!.isNotEmpty) {
-      return Image.network(
-        ProfileService.getProfilePhotoUrl(widget.currentPhotoUrl),
+      final imageUrl = ProfileService.getProfilePhotoUrl(widget.currentPhotoUrl!);
+      print('ProfilePhotoPicker: Loading image from URL: $imageUrl');
+      return CachedNetworkImage(
+        imageUrl: imageUrl,
         fit: BoxFit.cover,
         width: widget.size,
         height: widget.size,
-        errorBuilder: (context, error, stackTrace) {
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+          ),
+        ),
+        errorWidget: (context, url, error) {
+          print('ProfilePhotoPicker: Error loading image from URL: $url, Error: $error');
           return _buildPlaceholder();
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
-            ),
-          );
         },
       );
     } else {
