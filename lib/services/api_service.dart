@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // Use 10.0.2.2:8000 for Android emulator (maps to host machine localhost)
+  // Use 10.0.2.2:8000 for Android emulator to access host machine
   static const String baseUrl = 'http://10.0.2.2:8000/api';
   static const String storageUrl = 'http://10.0.2.2:8000/storage';
   
@@ -178,9 +178,14 @@ class ApiService {
   
   // Parse JSON response
   static Map<String, dynamic> parseResponse(http.Response response) {
+    print('=== API Response ===');
+    print('Status Code: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+    
     final responseBody = jsonDecode(response.body);
     
     if (response.statusCode >= 200 && response.statusCode < 300) {
+      print('Success response parsed: $responseBody');
       return responseBody;
     } else {
       // Handle 404 Not Found with specific message

@@ -18,6 +18,10 @@ class _RegisterScreenState extends State<RegisterScreen>
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
+  String? _selectedAnggotaLegislatifId;
+  List<Map<String, dynamic>> _anggotaLegislatifOptions = [];
+  bool _isLoadingOptions = true;
+  
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
@@ -52,6 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     ));
 
     _animationController.forward();
+    _loadAnggotaLegislatifOptions();
   }
 
   @override
@@ -63,6 +68,27 @@ class _RegisterScreenState extends State<RegisterScreen>
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadAnggotaLegislatifOptions() async {
+    try {
+      final response = await AuthService.getAnggotaLegislatifOptions();
+      if (mounted) {
+        setState(() {
+          _anggotaLegislatifOptions = List<Map<String, dynamic>>.from(response['data'] ?? []);
+          _isLoadingOptions = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading anggota legislatif options: $e');
+      if (mounted) {
+        setState(() {
+          _anggotaLegislatifOptions = [];
+          _isLoadingOptions = false;
+        });
+        // Don't show snackbar immediately, let user continue with registration
+      }
+    }
   }
 
   void _handleRegister() async {
@@ -78,6 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen>
           password: _passwordController.text,
           passwordConfirmation: _confirmPasswordController.text,
           phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
+          anggotaLegislatifId: _selectedAnggotaLegislatifId!,
         );
 
         if (mounted) {
@@ -326,6 +353,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   
                                   const SizedBox(height: 20),
                                   
+                                  // Anggota Legislatif Dropdown
+                                  _buildAnggotaLegislatifDropdown(),
+                                  
+                                  const SizedBox(height: 20),
+                                  
                                   // Password Field
                                   _buildTextField(
                                     controller: _passwordController,
@@ -518,6 +550,134 @@ class _RegisterScreenState extends State<RegisterScreen>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAnggotaLegislatifDropdown() {
+    if (_isLoadingOptions) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+          color: Colors.grey[50],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: const Row(
+          children: [
+            Icon(Icons.person_outline, color: Color(0xFF667eea)),
+            SizedBox(width: 12),
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color(0xFF667eea),
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Memuat daftar anggota legislatif...',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF2D3748),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // If no options available, show disabled field
+    if (_anggotaLegislatifOptions.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+          color: Colors.grey[100],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: const Row(
+          children: [
+            Icon(Icons.person_outline, color: Colors.grey),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Anggota Legislatif (Opsional) - Tidak tersedia',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return DropdownButtonFormField<String>(
+      value: _selectedAnggotaLegislatifId,
+      isExpanded: true,
+      isDense: true,
+      menuMaxHeight: 200.0, // Limit dropdown menu height
+      style: const TextStyle(
+        fontSize: 16,
+        color: Color(0xFF2D3748),
+      ),
+      decoration: InputDecoration(
+        labelText: 'Anggota Legislatif *',
+        prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        hintText: 'Pilih Anggota Legislatif',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      items: _anggotaLegislatifOptions.map((option) {
+        return DropdownMenuItem<String>(
+          value: option['id'].toString(),
+          child: Text(
+            option['nama_lengkap'] ?? '',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF2D3748),
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        );
+      }).toList(),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Pilih anggota legislatif yang Anda dukung';
+        }
+        return null;
+      },
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedAnggotaLegislatifId = newValue;
+        });
+      },
     );
   }
 

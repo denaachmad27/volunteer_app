@@ -112,6 +112,7 @@ class AuthService {
     required String password,
     required String passwordConfirmation,
     String? phone,
+    required String anggotaLegislatifId,
   }) async {
     try {
       final Map<String, dynamic> requestData = {
@@ -125,6 +126,9 @@ class AuthService {
       if (phone != null && phone.isNotEmpty) {
         requestData['phone'] = phone;
       }
+      
+      // Add anggota_legislatif_id - now required
+      requestData['anggota_legislatif_id'] = int.parse(anggotaLegislatifId);
       
       final response = await ApiService.post('/auth/register', requestData);
 
@@ -244,5 +248,19 @@ class AuthService {
       return 'Password harus mengandung angka';
     }
     return null;
+  }
+
+  // Get anggota legislatif options for dropdown
+  static Future<Map<String, dynamic>> getAnggotaLegislatifOptions() async {
+    try {
+      print('Fetching anggota legislatif options from API...');
+      final response = await ApiService.get('/anggota-legislatif/options');
+      final parsedResponse = ApiService.parseResponse(response);
+      print('Anggota legislatif options response: $parsedResponse');
+      return parsedResponse;
+    } catch (e) {
+      print('Error in getAnggotaLegislatifOptions: $e');
+      throw Exception('Gagal memuat daftar anggota legislatif: $e');
+    }
   }
 }

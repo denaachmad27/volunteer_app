@@ -364,16 +364,16 @@ class NewsService {
       return imagePath;
     }
     
-    // Use 10.0.2.2:8000 with Laravel storage link path
+    // Use ApiService.storageUrl to match the configured backend server
     final cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     String fullUrl;
     
     // Laravel storage:link creates symlink from /storage/ to /storage/app/public/
     if (cleanPath.startsWith('news_images/')) {
-      fullUrl = 'http://10.0.2.2:8000/storage/$cleanPath';
+      fullUrl = '${ApiService.storageUrl}/$cleanPath';
     } else {
       // Add news_images prefix if not present
-      fullUrl = 'http://10.0.2.2:8000/storage/news_images/$cleanPath';
+      fullUrl = '${ApiService.storageUrl}/news_images/$cleanPath';
     }
     
     print('=== Image URL Generated ===');
@@ -412,6 +412,7 @@ class NewsService {
   // Test server connectivity
   static Future<Map<String, String>> testServerConnectivity() async {
     final servers = [
+      'http://192.168.0.194:8000',
       'http://10.0.2.2:8000',
       'http://localhost:8000',
       'http://127.0.0.1:8000',
