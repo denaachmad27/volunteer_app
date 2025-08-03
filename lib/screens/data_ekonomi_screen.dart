@@ -118,7 +118,7 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -137,7 +137,7 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
               ),
             )
           : FadeTransition(
@@ -149,7 +149,7 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToForm,
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         child: Icon(_hasData ? Icons.edit : Icons.add, color: Colors.white),
       ),
     );
@@ -243,12 +243,12 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF667eea).withOpacity(0.1),
+                                color: const Color(0xFFff5001).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Icon(
                                 Icons.add_business,
-                                color: Color(0xFF667eea),
+                                color: Color(0xFFff5001),
                                 size: 20,
                               ),
                             ),
@@ -300,7 +300,7 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
@@ -439,13 +439,13 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: const Color(0xFF667eea).withOpacity(0.1),
+                color: const Color(0xFFff5001).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.analytics,
                 size: 60,
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
               ),
             ),
             const SizedBox(height: 24),
@@ -472,7 +472,7 @@ class _DataEkonomiScreenState extends State<DataEkonomiScreen>
               icon: const Icon(Icons.add),
               label: const Text('Isi Data Ekonomi'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(

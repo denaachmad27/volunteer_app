@@ -76,7 +76,7 @@ class CustomDropdownField<T> extends StatelessWidget {
             prefixIcon: prefixIcon != null
                 ? Icon(
                     prefixIcon,
-                    color: const Color(0xFF667eea),
+                    color: const Color(0xFFff5001),
                     size: 20,
                   )
                 : null,
@@ -90,7 +90,7 @@ class CustomDropdownField<T> extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+              borderSide: const BorderSide(color: Color(0xFFff5001), width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -114,7 +114,7 @@ class CustomDropdownField<T> extends StatelessWidget {
           ),
           icon: const Icon(
             Icons.keyboard_arrow_down,
-            color: Color(0xFF667eea),
+            color: Color(0xFFff5001),
             size: 24,
           ),
           isExpanded: true,

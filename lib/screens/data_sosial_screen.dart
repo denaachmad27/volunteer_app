@@ -118,7 +118,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -137,7 +137,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
               ),
             )
           : FadeTransition(
@@ -149,7 +149,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToForm,
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         child: Icon(_hasData ? Icons.edit : Icons.add, color: Colors.white),
       ),
     );
@@ -216,7 +216,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
@@ -464,12 +464,12 @@ class _DataSosialScreenState extends State<DataSosialScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  color: const Color(0xFFff5001).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
                   Icons.business,
-                  color: Color(0xFF667eea),
+                  color: Color(0xFFff5001),
                   size: 24,
                 ),
               ),
@@ -677,7 +677,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
                 icon: const Icon(Icons.history, size: 16),
                 label: const Text('Lihat Riwayat Lengkap'),
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF667eea),
+                  foregroundColor: const Color(0xFFff5001),
                   textStyle: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -919,13 +919,13 @@ class _DataSosialScreenState extends State<DataSosialScreen>
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: const Color(0xFF667eea).withOpacity(0.1),
+                color: const Color(0xFFff5001).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.groups,
                 size: 60,
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
               ),
             ),
             const SizedBox(height: 24),
@@ -952,7 +952,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
               icon: const Icon(Icons.add),
               label: const Text('Isi Data Sosial'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(

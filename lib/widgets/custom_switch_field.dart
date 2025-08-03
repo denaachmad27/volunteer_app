@@ -31,12 +31,12 @@ class CustomSwitchField extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF667eea).withOpacity(0.1),
+                color: const Color(0xFFff5001).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: const Color(0xFF667eea),
+                color: const Color(0xFFff5001),
                 size: 20,
               ),
             ),
@@ -70,8 +70,8 @@ class CustomSwitchField extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF667eea),
-            activeTrackColor: const Color(0xFF667eea).withOpacity(0.3),
+            activeColor: const Color(0xFFff5001),
+            activeTrackColor: const Color(0xFFff5001).withOpacity(0.3),
             inactiveThumbColor: Colors.grey.shade400,
             inactiveTrackColor: Colors.grey.shade300,
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,52 +10,52 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late AnimationController _particleController;
-  late Animation<double> _logoAnimation;
+  late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  late double _screenWidth;
-  late double _screenHeight;
+  late Animation<double> _scaleAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     
-    _logoController = AnimationController(
-      duration: const Duration(seconds: 2),
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
-    _particleController = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    );
-
-    _logoAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.elasticOut,
-    ));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+      parent: _animationController,
+      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+    ));
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.0, 0.6, curve: Curves.easeOutBack),
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
     ));
 
     _startAnimation();
   }
 
   void _startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    _logoController.forward();
-    _particleController.repeat();
+    await Future.delayed(const Duration(milliseconds: 300));
+    _animationController.forward();
     
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 3));
     if (mounted) {
       context.go('/login');
     }
@@ -64,122 +63,135 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _logoController.dispose();
-    _particleController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
-    
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF6B73FF),
-              Color(0xFF000DFF),
+              Colors.white,
+              Color(0xFFFFF8F5),
             ],
-            stops: [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         child: Stack(
           children: [
-            // Animated background particles
-            ...List.generate(20, (index) => _buildParticle(index)),
+            // Subtle background pattern
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _DotPatternPainter(),
+              ),
+            ),
             
             // Main content
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo animation
+                  // Logo with scale animation
                   AnimatedBuilder(
-                    animation: _logoAnimation,
+                    animation: _scaleAnimation,
                     builder: (context, child) {
                       return Transform.scale(
-                        scale: _logoAnimation.value,
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: const RadialGradient(
-                              colors: [
-                                Color(0xFFFFFFFF),
-                                Color(0xFFE3F2FD),
-                                Color(0xFFBBDEFB),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white.withOpacity(0.3),
-                                blurRadius: 20,
-                                spreadRadius: 5,
+                        scale: _scaleAnimation.value,
+                        child: AnimatedBuilder(
+                          animation: _fadeAnimation,
+                          builder: (context, child) {
+                            return Opacity(
+                              opacity: _fadeAnimation.value,
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFFff5001),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFFff5001).withOpacity(0.3),
+                                      blurRadius: 30,
+                                      spreadRadius: 0,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.volunteer_activism_rounded,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  
+                  const SizedBox(height: 40),
+                  
+                  // App title with slide animation
+                  SlideTransition(
+                    position: _slideAnimation,
+                    child: AnimatedBuilder(
+                      animation: _fadeAnimation,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: _fadeAnimation.value,
+                          child: Column(
+                            children: [
+                              const Text(
+                                'VolunteerHub',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF2D3748),
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Connecting Hearts, Building Communities',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey[600],
+                                  letterSpacing: 0.2,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.volunteer_activism_rounded,
-                            size: 60,
-                            color: Color(0xFF667eea),
+                        );
+                      },
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 80),
+                  
+                  // Modern loading indicator
+                  AnimatedBuilder(
+                    animation: _fadeAnimation,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _fadeAnimation.value,
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
+                            backgroundColor: Colors.grey[200],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  const SizedBox(height: 30),
-                  
-                  // App title
-                  AnimatedBuilder(
-                    animation: _fadeAnimation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _fadeAnimation.value,
-                        child: Column(
-                          children: [
-                            const Text(
-                              'VolunteerHub',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Connecting Hearts, Building Communities',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white.withOpacity(0.8),
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  const SizedBox(height: 60),
-                  
-                  // Loading indicator
-                  AnimatedBuilder(
-                    animation: _fadeAnimation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _fadeAnimation.value,
-                        child: const SpinKitWave(
-                          color: Colors.white,
-                          size: 40,
                         ),
                       );
                     },
@@ -187,44 +199,56 @@ class _SplashScreenState extends State<SplashScreen>
                 ],
               ),
             ),
+            
+            // Bottom branding
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: AnimatedBuilder(
+                animation: _fadeAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: _fadeAnimation.value * 0.7,
+                    child: Text(
+                      'Powered by VolunteerHub',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[500],
+                        letterSpacing: 0.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildParticle(int index) {
-    final random = (index * 137.5) % 1;
-    final size = 2.0 + (random * 8);
-    final initialX = (index * 47.3) % _screenWidth;
-    final initialY = (index * 73.7) % _screenHeight;
+// Custom painter for dot pattern background
+class _DotPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.grey.withOpacity(0.03)
+      ..style = PaintingStyle.fill;
 
-    return AnimatedBuilder(
-      animation: _particleController,
-      builder: (context, child) {
-        final animationValue = _particleController.value;
-        final x = initialX + (50 * animationValue * (index % 2 == 0 ? 1 : -1));
-        final y = initialY + (30 * animationValue);
-        
-        return Positioned(
-          left: x % _screenWidth,
-          top: y % _screenHeight,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.1 + (random * 0.3)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.1),
-                  blurRadius: size,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    const spacing = 40.0;
+    const dotRadius = 1.0;
+
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), dotRadius, paint);
+      }
+    }
   }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

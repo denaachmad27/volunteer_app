@@ -46,8 +46,8 @@ class _NotificationScreenState extends State<NotificationScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
+              Color(0xFFff5001),
+              Color(0xFFe64100),
             ],
           ),
         ),
@@ -214,10 +214,10 @@ class _NotificationScreenState extends State<NotificationScreen>
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF667eea).withOpacity(0.1),
+              color: const Color(0xFFff5001).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFF667eea).withOpacity(0.2),
+                color: const Color(0xFFff5001).withOpacity(0.2),
               ),
             ),
             child: Row(
@@ -226,12 +226,12 @@ class _NotificationScreenState extends State<NotificationScreen>
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF667eea).withOpacity(0.2),
+                    color: const Color(0xFFff5001).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
                     Icons.notifications_active_rounded,
-                    color: Color(0xFF667eea),
+                    color: Color(0xFFff5001),
                     size: 20,
                   ),
                 ),
@@ -245,14 +245,14 @@ class _NotificationScreenState extends State<NotificationScreen>
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF667eea),
+                          color: Color(0xFFff5001),
                         ),
                       ),
                       const Text(
                         'Anda memiliki update penting',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF667eea),
+                          color: Color(0xFFff5001),
                         ),
                       ),
                     ],
@@ -285,7 +285,7 @@ class _NotificationScreenState extends State<NotificationScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isRead ? Colors.white : const Color(0xFF667eea).withOpacity(0.05),
+        color: isRead ? Colors.white : const Color(0xFFff5001).withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -295,7 +295,7 @@ class _NotificationScreenState extends State<NotificationScreen>
           ),
         ],
         border: Border.all(
-          color: isRead ? Colors.grey[200]! : const Color(0xFF667eea).withOpacity(0.2),
+          color: isRead ? Colors.grey[200]! : const Color(0xFFff5001).withOpacity(0.2),
         ),
       ),
       child: Material(
@@ -347,7 +347,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                               width: 8,
                               height: 8,
                               decoration: const BoxDecoration(
-                                color: Color(0xFF667eea),
+                                color: Color(0xFFff5001),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -479,7 +479,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             child: const Text(
               'Batal',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -496,7 +496,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
+              backgroundColor: const Color(0xFFff5001),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

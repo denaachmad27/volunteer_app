@@ -8,6 +8,7 @@ import 'screens/profil_personal_screen.dart';
 import 'screens/data_keluarga_screen.dart';
 import 'screens/data_ekonomi_screen.dart';
 import 'screens/data_sosial_screen.dart';
+import 'screens/legislative_member_detail_screen.dart';
 
 void main() {
   runApp(VolunteerApp());
@@ -51,6 +52,13 @@ class VolunteerApp extends StatelessWidget {
         path: '/data-sosial',
         builder: (context, state) => const DataSosialScreen(),
       ),
+      GoRoute(
+        path: '/legislative-member/:id',
+        builder: (context, state) {
+          final memberId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
+          return LegislativeMemberDetailScreen(memberId: memberId);
+        },
+      ),
     ],
   );
 
@@ -62,7 +70,7 @@ class VolunteerApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF667eea),
+          seedColor: const Color(0xFFff5001),
           brightness: Brightness.light,
         ),
         fontFamily: 'System',

@@ -125,7 +125,7 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -163,7 +163,7 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _saveSocialData,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF667eea),
+                    backgroundColor: const Color(0xFFff5001),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -202,7 +202,7 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -386,12 +386,12 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  color: const Color(0xFFff5001).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.business,
-                  color: Color(0xFF667eea),
+                  color: Color(0xFFff5001),
                   size: 20,
                 ),
               ),

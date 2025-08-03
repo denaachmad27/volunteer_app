@@ -92,8 +92,8 @@ class _SettingsScreenState extends State<SettingsScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
+              Color(0xFFff5001),
+              Color(0xFFe64100),
             ],
           ),
         ),
@@ -149,20 +149,20 @@ class _SettingsScreenState extends State<SettingsScreen>
                                         ),
                                         child: const Icon(
                                           Icons.person,
-                                          color: Color(0xFF667eea),
+                                          color: Color(0xFFff5001),
                                           size: 30,
                                         ),
                                       ),
                                       errorWidget: (context, url, error) => const Icon(
                                         Icons.person,
-                                        color: Color(0xFF667eea),
+                                        color: Color(0xFFff5001),
                                         size: 30,
                                       ),
                                     ),
                                   )
                                 : const Icon(
                                     Icons.person,
-                                    color: Color(0xFF667eea),
+                                    color: Color(0xFFff5001),
                                     size: 30,
                                   ),
                           ),
@@ -511,12 +511,12 @@ class _SettingsScreenState extends State<SettingsScreen>
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF667eea).withOpacity(0.1),
+            color: const Color(0xFFff5001).withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
             icon,
-            color: const Color(0xFF667eea),
+            color: const Color(0xFFff5001),
             size: 20,
           ),
         ),
@@ -573,12 +573,12 @@ class _SettingsScreenState extends State<SettingsScreen>
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF667eea).withOpacity(0.1),
+            color: const Color(0xFFff5001).withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
             icon,
-            color: const Color(0xFF667eea),
+            color: const Color(0xFFff5001),
             size: 20,
           ),
         ),
@@ -599,7 +599,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: const Color(0xFF667eea),
+          activeColor: const Color(0xFFff5001),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -655,7 +655,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
               ),
             ),
             SizedBox(height: 8),
@@ -684,7 +684,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             child: const Text(
               'Tutup',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -803,7 +803,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             child: const Text(
               'OK',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -839,7 +839,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             child: const Text(
               'Batal',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -61,7 +61,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
     
     try {
       final date = DateTime.parse(dateStr);
-      return '${date.day}/${date.month}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+      return '${date.day}/${date.month}/${date.year}';
     } catch (e) {
       return dateStr;
     }
@@ -129,7 +129,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const CircularProgressIndicator(
-                            color: Color(0xFF667eea),
+                            color: Color(0xFFff5001),
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -212,7 +212,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -236,7 +236,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: _refreshComplaint,
-        color: const Color(0xFF667eea),
+        color: const Color(0xFFff5001),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
@@ -269,7 +269,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF667eea),
+                            color: Color(0xFFff5001),
                           ),
                         ),
                         const Spacer(),
@@ -469,7 +469,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const CircularProgressIndicator(
-                                        color: Color(0xFF667eea),
+                                        color: Color(0xFFff5001),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
@@ -546,7 +546,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                         icon: Icons.admin_panel_settings_outlined,
                         title: 'Tanggapan Admin',
                         subtitle: _formatDate(_complaint['tanggal_respon']),
-                        color: const Color(0xFF667eea),
+                        color: const Color(0xFFff5001),
                         isCompleted: true,
                       ),
                     
@@ -716,7 +716,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF667eea),
+                      backgroundColor: const Color(0xFFff5001),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -912,7 +912,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                 }
               } : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
               ),
               child: isSubmitting 

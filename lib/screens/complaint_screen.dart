@@ -78,7 +78,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
@@ -261,8 +261,8 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                       icon: const Icon(Icons.edit_outlined),
                       label: const Text('Buat Pengaduan Manual'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFF667eea),
-                        side: const BorderSide(color: Color(0xFF667eea)),
+                        foregroundColor: const Color(0xFFff5001),
+                        side: const BorderSide(color: Color(0xFFff5001)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -358,7 +358,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
               ),
               SizedBox(height: 16),
               Text(
@@ -410,7 +410,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                 icon: const Icon(Icons.refresh),
                 label: const Text('Coba Lagi'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF667eea),
+                  backgroundColor: const Color(0xFFff5001),
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -458,7 +458,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                 icon: const Icon(Icons.add),
                 label: const Text('Buat Pengaduan'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF667eea),
+                  backgroundColor: const Color(0xFFff5001),
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -470,7 +470,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
 
     return RefreshIndicator(
       onRefresh: _loadComplaints,
-      color: const Color(0xFF667eea),
+      color: const Color(0xFFff5001),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _complaints.length,
@@ -521,7 +521,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF667eea),
+                            color: Color(0xFFff5001),
                           ),
                         ),
                         const Spacer(),
@@ -754,7 +754,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                       _showRatingDialog(complaint);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF667eea),
+                      backgroundColor: const Color(0xFFff5001),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -934,7 +934,7 @@ class _ComplaintScreenState extends State<ComplaintScreen>
                 }
               } : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
               ),
               child: isSubmitting 
@@ -1010,7 +1010,7 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -1234,8 +1234,8 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
                                     icon: const Icon(Icons.camera_alt),
                                     label: const Text('Kamera'),
                                     style: OutlinedButton.styleFrom(
-                                      foregroundColor: const Color(0xFF667eea),
-                                      side: const BorderSide(color: Color(0xFF667eea)),
+                                      foregroundColor: const Color(0xFFff5001),
+                                      side: const BorderSide(color: Color(0xFFff5001)),
                                     ),
                                   ),
                                 ),
@@ -1246,8 +1246,8 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
                                     icon: const Icon(Icons.photo_library),
                                     label: const Text('Galeri'),
                                     style: OutlinedButton.styleFrom(
-                                      foregroundColor: const Color(0xFF667eea),
-                                      side: const BorderSide(color: Color(0xFF667eea)),
+                                      foregroundColor: const Color(0xFFff5001),
+                                      side: const BorderSide(color: Color(0xFFff5001)),
                                     ),
                                   ),
                                 ),
@@ -1267,7 +1267,7 @@ class _ComplaintFormScreenState extends State<ComplaintFormScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitComplaint,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF667eea),
+                    backgroundColor: const Color(0xFFff5001),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -84,7 +84,7 @@ class _CustomCurrencyFieldState extends State<CustomCurrencyField> {
             ),
             prefixIcon: Icon(
               widget.prefixIcon ?? Icons.attach_money,
-              color: const Color(0xFF667eea),
+              color: const Color(0xFFff5001),
               size: 20,
             ),
             prefixText: 'Rp ',
@@ -103,7 +103,7 @@ class _CustomCurrencyFieldState extends State<CustomCurrencyField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+              borderSide: const BorderSide(color: Color(0xFFff5001), width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

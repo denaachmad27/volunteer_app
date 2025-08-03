@@ -7,9 +7,12 @@ import '../services/auth_service.dart';
 import '../services/news_service.dart';
 import '../services/profile_completion_service.dart';
 import '../services/profile_service.dart';
+import '../services/legislative_service.dart';
 import '../widgets/robust_network_image.dart';
 import '../widgets/reliable_network_image.dart';
 import '../widgets/profile_completion_card.dart';
+import '../widgets/legislative_member_card.dart';
+import 'legislative_member_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(int)? onTabChange;
@@ -32,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen>
   bool _profileCompletionLoading = true;
   Map<String, dynamic>? _profileData;
   bool _profileDataLoading = true;
+  List<LegislativeMember> _legislativeMembers = [];
+  bool _legislativeLoading = true;
 
   @override
   void initState() {
@@ -53,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen>
     _loadLatestNews();
     _loadProfileCompletion();
     _loadProfileData();
+    _loadLegislativeMembers();
     _animationController.forward();
     
     // Retry loading news after a short delay if needed
@@ -71,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (mounted) {
       _loadProfileCompletion();
       _loadProfileData();
+      _loadLegislativeMembers();
     }
   }
 
@@ -175,6 +182,32 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  Future<void> _loadLegislativeMembers() async {
+    try {
+      print('=== HOME SCREEN: Loading legislative members ===');
+      final response = await LegislativeService.getActiveLegislativeMembers();
+      
+      if (response.success && response.data.isNotEmpty) {
+        setState(() {
+          // Take only the first member for the card display
+          _legislativeMembers = response.data.take(1).toList();
+          _legislativeLoading = false;
+        });
+        print('=== HOME SCREEN: Legislative members loaded: ${_legislativeMembers.length} ===');
+      } else {
+        setState(() {
+          _legislativeLoading = false;
+        });
+        print('=== HOME SCREEN: No legislative members found ===');
+      }
+    } catch (e) {
+      print('=== HOME SCREEN: Error loading legislative members: $e ===');
+      setState(() {
+        _legislativeLoading = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -203,8 +236,8 @@ class _HomeScreenState extends State<HomeScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
+              Color(0xFFff5001),
+              Color(0xFFe64100),
             ],
           ),
         ),
@@ -340,8 +373,8 @@ class _HomeScreenState extends State<HomeScreen>
                             
                             const SizedBox(height: 32),
                             
-                            // Profile Completion Reminder
-                            if (!_profileCompletionLoading && _profileCompletion != null)
+                            // Profile Completion Reminder - only show if profile is not complete
+                            if (!_profileCompletionLoading && _profileCompletion != null && !_profileCompletion!['is_complete'])
                               ProfileCompletionCard(
                                 percentage: _profileCompletion!['percentage'],
                                 completedSections: _profileCompletion!['completed_sections'],
@@ -365,44 +398,97 @@ class _HomeScreenState extends State<HomeScreen>
                             
                             const SizedBox(height: 16),
                             
-                            GridView.count(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 1.1,
-                              children: [
-                                _buildQuickActionCard(
-                                  icon: Icons.volunteer_activism_rounded,
-                                  title: 'Bantuan Sosial',
-                                  subtitle: 'Ajukan bantuan',
-                                  color: const Color(0xFF667eea),
-                                  onTap: () => _navigateToScreen(const BantuanSosialScreen()),
-                                ),
-                                _buildQuickActionCard(
-                                  icon: Icons.article_rounded,
-                                  title: 'Berita Terbaru',
-                                  subtitle: 'Informasi terkini',
-                                  color: const Color(0xFF2196F3),
-                                  onTap: () => _navigateToScreen(const NewsScreen()),
-                                ),
-                                _buildQuickActionCard(
-                                  icon: Icons.report_problem_rounded,
-                                  title: 'Buat Pengaduan',
-                                  subtitle: 'Laporkan masalah',
-                                  color: const Color(0xFFFF9800),
-                                  onTap: () => _navigateToScreen(const ComplaintScreen()),
-                                ),
-                                _buildQuickActionCard(
-                                  icon: Icons.settings_rounded,
-                                  title: 'Pengaturan',
-                                  subtitle: 'Kelola aplikasi',
-                                  color: const Color(0xFF9C27B0),
-                                  onTap: () => _navigateToTab(4), // Navigate to Settings tab
-                                ),
-                              ],
+                            // Horizontal scrollable row of services
+                            SizedBox(
+                              height: 100,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                children: [
+                                  _buildCompactServiceCard(
+                                    icon: Icons.volunteer_activism_rounded,
+                                    title: 'Bantuan Sosial',
+                                    color: _isProfileComplete() ? const Color(0xFFff5001) : Colors.grey,
+                                    onTap: _isProfileComplete() ? () => _navigateToScreen(const BantuanSosialScreen()) : _showProfileIncompleteDialog,
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildCompactServiceCard(
+                                    icon: Icons.article_rounded,
+                                    title: 'Berita Terbaru',
+                                    color: const Color(0xFF2196F3),
+                                    onTap: () => _navigateToScreen(const NewsScreen()),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildCompactServiceCard(
+                                    icon: Icons.report_problem_rounded,
+                                    title: 'Buat Pengaduan',
+                                    color: const Color(0xFFFF9800),
+                                    onTap: () => _navigateToScreen(const ComplaintScreen()),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildCompactServiceCard(
+                                    icon: Icons.settings_rounded,
+                                    title: 'Pengaturan',
+                                    color: const Color(0xFF9C27B0),
+                                    onTap: () => _navigateToTab(4), // Navigate to Settings tab
+                                  ),
+                                ],
+                              ),
                             ),
+                            
+                            const SizedBox(height: 32),
+                            
+                            // Legislative Member Section
+                            const Text(
+                              'Anggota Legislatif',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2D3748),
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 16),
+                            
+                            // Legislative Member Card
+                            _legislativeLoading
+                                ? const LegislativeMemberCardSkeleton()
+                                : _legislativeMembers.isEmpty
+                                    ? Container(
+                                        padding: const EdgeInsets.all(24),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[50],
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(color: Colors.grey[200]!),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.account_balance_outlined,
+                                              size: 48,
+                                              color: Colors.grey[400],
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              'Belum ada anggota legislatif terdaftar',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            TextButton(
+                                              onPressed: _loadLegislativeMembers,
+                                              child: const Text('Coba Lagi'),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : LegislativeMemberCard(
+                                        member: _legislativeMembers.first,
+                                        onTap: () => _navigateToLegislativeMemberDetail(_legislativeMembers.first.id),
+                                      ),
                             
                             const SizedBox(height: 32),
                             
@@ -507,10 +593,10 @@ class _HomeScreenState extends State<HomeScreen>
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: color.withOpacity(0.2),
         ),
@@ -518,25 +604,30 @@ class _HomeScreenState extends State<HomeScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 28,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                icon,
+                color: color,
+                size: 22,
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Text(
             title,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.grey[600],
               fontWeight: FontWeight.w500,
             ),
@@ -618,6 +709,50 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  Widget _buildCompactServiceCard({
+    required IconData icon,
+    required String title,
+    required Color color,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: 80,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF2D3748),
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildNewsCard({
     required String title,
     required String summary,
@@ -669,7 +804,7 @@ class _HomeScreenState extends State<HomeScreen>
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
                               ),
                             ),
                           ),
@@ -837,6 +972,128 @@ class _HomeScreenState extends State<HomeScreen>
       MaterialPageRoute(
         builder: (context) => NewsDetailScreen(news: news),
       ),
+    );
+  }
+
+  void _navigateToLegislativeMemberDetail(int memberId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LegislativeMemberDetailScreen(memberId: memberId),
+      ),
+    );
+  }
+
+  bool _isProfileComplete() {
+    return _profileCompletion != null && _profileCompletion!['is_complete'] == true;
+  }
+
+  void _showProfileIncompleteDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_outlined,
+                color: Colors.orange[600],
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text(
+                  'Lengkapi Data Diri Anda',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Untuk mengakses fitur Bantuan Sosial, Anda perlu melengkapi data profil terlebih dahulu.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[700],
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.blue[600],
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Data yang diperlukan: Profil Personal, Data Keluarga, Data Ekonomi, dan Data Sosial',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Nanti',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Navigate to profile page
+                _navigateToTab(3); // Assuming profile tab is at index 3
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFff5001),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Lengkapi Data',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

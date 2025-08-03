@@ -84,7 +84,7 @@ class _NewsScreenState extends State<NewsScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         elevation: 0,
       ),
       body: Column(
@@ -105,7 +105,7 @@ class _NewsScreenState extends State<NewsScreen> {
               },
               decoration: InputDecoration(
                 hintText: 'Cari berita...',
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF667eea)),
+                prefixIcon: const Icon(Icons.search, color: Color(0xFFff5001)),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
@@ -125,7 +125,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+                  borderSide: const BorderSide(color: Color(0xFFff5001), width: 2),
                 ),
                 filled: true,
                 fillColor: Colors.grey[50],
@@ -159,13 +159,13 @@ class _NewsScreenState extends State<NewsScreen> {
                       _loadNews();
                     },
                     backgroundColor: Colors.grey[100],
-                    selectedColor: const Color(0xFF667eea).withOpacity(0.2),
+                    selectedColor: const Color(0xFFff5001).withOpacity(0.2),
                     labelStyle: TextStyle(
-                      color: isSelected ? const Color(0xFF667eea) : Colors.grey[700],
+                      color: isSelected ? const Color(0xFFff5001) : Colors.grey[700],
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                     side: BorderSide(
-                      color: isSelected ? const Color(0xFF667eea) : Colors.grey[300]!,
+                      color: isSelected ? const Color(0xFFff5001) : Colors.grey[300]!,
                     ),
                   ),
                 );
@@ -229,7 +229,7 @@ class _NewsScreenState extends State<NewsScreen> {
               child: const Text(
                 'Hapus pencarian',
                 style: TextStyle(
-                  color: Color(0xFF667eea),
+                  color: Color(0xFFff5001),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -250,7 +250,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ElevatedButton.icon(
                   onPressed: _loadNews,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF667eea),
+                    backgroundColor: const Color(0xFFff5001),
                     foregroundColor: Colors.white,
                   ),
                   icon: const Icon(Icons.refresh),
@@ -269,7 +269,7 @@ class _NewsScreenState extends State<NewsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
           ),
           SizedBox(height: 16),
           Text(
@@ -359,7 +359,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ElevatedButton.icon(
                   onPressed: _loadNews,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF667eea),
+                    backgroundColor: const Color(0xFFff5001),
                     foregroundColor: Colors.white,
                   ),
                   icon: const Icon(Icons.refresh),
@@ -502,11 +502,11 @@ class _NewsScreenState extends State<NewsScreen> {
                       Container(
                         width: double.infinity,
                         height: double.infinity,
-                        color: const Color(0xFF667eea).withOpacity(0.1),
+                        color: const Color(0xFFff5001).withOpacity(0.1),
                         child: const Icon(
                           Icons.image_outlined,
                           size: 50,
-                          color: Color(0xFF667eea),
+                          color: Color(0xFFff5001),
                         ),
                       ),
                       // Category badge
@@ -535,29 +535,29 @@ class _NewsScreenState extends State<NewsScreen> {
                           imagePath: news.gambarUtama,
                           fit: BoxFit.cover,
                           placeholder: Container(
-                            color: const Color(0xFF667eea).withOpacity(0.1),
+                            color: const Color(0xFFff5001).withOpacity(0.1),
                             child: const Center(
                               child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
                               ),
                             ),
                           ),
                           errorWidget: Container(
-                            color: const Color(0xFF667eea).withOpacity(0.1),
+                            color: const Color(0xFFff5001).withOpacity(0.1),
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.broken_image_outlined,
                                   size: 40,
-                                  color: Color(0xFF667eea),
+                                  color: Color(0xFFff5001),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
                                   'Gambar tidak dapat dimuat',
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Color(0xFF667eea),
+                                    color: Color(0xFFff5001),
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -700,7 +700,7 @@ class NewsDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
-            backgroundColor: const Color(0xFF667eea),
+            backgroundColor: const Color(0xFFff5001),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pop(context),
@@ -710,7 +710,7 @@ class NewsDetailScreen extends StatelessWidget {
                 imagePath: news.gambarUtama,
                 fit: BoxFit.cover,
                 placeholder: Container(
-                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  color: const Color(0xFFff5001).withOpacity(0.1),
                   child: const Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -718,7 +718,7 @@ class NewsDetailScreen extends StatelessWidget {
                   ),
                 ),
                 errorWidget: Container(
-                  color: const Color(0xFF667eea).withOpacity(0.1),
+                  color: const Color(0xFFff5001).withOpacity(0.1),
                   child: const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -726,13 +726,13 @@ class NewsDetailScreen extends StatelessWidget {
                         Icon(
                           Icons.broken_image_outlined,
                           size: 80,
-                          color: Color(0xFF667eea),
+                          color: Color(0xFFff5001),
                         ),
                         SizedBox(height: 8),
                         Text(
                           'Gambar tidak dapat dimuat',
                           style: TextStyle(
-                            color: Color(0xFF667eea),
+                            color: Color(0xFFff5001),
                             fontSize: 14,
                           ),
                         ),
@@ -882,8 +882,8 @@ class NewsDetailScreen extends StatelessWidget {
                         icon: const Icon(Icons.share_outlined),
                         label: const Text('Bagikan Artikel'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF667eea),
-                          side: const BorderSide(color: Color(0xFF667eea)),
+                          foregroundColor: const Color(0xFFff5001),
+                          side: const BorderSide(color: Color(0xFFff5001)),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

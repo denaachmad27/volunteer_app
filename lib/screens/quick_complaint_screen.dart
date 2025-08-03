@@ -55,7 +55,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
+              Color(0xFFff5001),
               Color(0xFF764ba2),
             ],
           ),
@@ -138,14 +138,14 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
                                     colors: [
-                                      Color(0xFF667eea),
+                                      Color(0xFFff5001),
                                       Color(0xFF764ba2),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF667eea).withOpacity(0.3),
+                                      color: const Color(0xFFff5001).withOpacity(0.3),
                                       blurRadius: 20,
                                       offset: const Offset(0, 10),
                                     ),
@@ -319,8 +319,8 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
                                           _openManualForm();
                                         },
                                         style: OutlinedButton.styleFrom(
-                                          foregroundColor: const Color(0xFF667eea),
-                                          side: const BorderSide(color: Color(0xFF667eea)),
+                                          foregroundColor: const Color(0xFFff5001),
+                                          side: const BorderSide(color: Color(0xFFff5001)),
                                           padding: const EdgeInsets.symmetric(vertical: 12),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12),
@@ -523,7 +523,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
             child: const Text(
               'OK',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -578,7 +578,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
             child: const Text(
               'OK',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -592,7 +592,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Kategori "$category" dipilih. Ambil foto untuk melanjutkan.'),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -606,7 +606,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Membuka form pengaduan manual...'),
-        backgroundColor: Color(0xFF667eea),
+        backgroundColor: Color(0xFFff5001),
         behavior: SnackBarBehavior.floating,
       ),
     );

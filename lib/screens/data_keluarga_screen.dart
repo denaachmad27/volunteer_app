@@ -173,7 +173,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -187,7 +187,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
               ),
             )
           : FadeTransition(
@@ -199,7 +199,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addFamilyMember,
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -226,7 +226,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
@@ -381,13 +381,13 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: const Color(0xFF667eea).withOpacity(0.1),
+                color: const Color(0xFFff5001).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.family_restroom,
                 size: 60,
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
               ),
             ),
             const SizedBox(height: 24),
@@ -414,7 +414,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
               icon: const Icon(Icons.add),
               label: const Text('Tambah Anggota Keluarga'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -450,7 +450,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
                 icon: const Icon(Icons.add, size: 18),
                 label: const Text('Tambah'),
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF667eea),
+                  foregroundColor: const Color(0xFFff5001),
                 ),
               ),
             ],

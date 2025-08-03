@@ -233,7 +233,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
@@ -283,13 +283,13 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                     _loadPrograms();
                   },
                   backgroundColor: Colors.white,
-                  selectedColor: const Color(0xFF667eea).withOpacity(0.2),
+                  selectedColor: const Color(0xFFff5001).withOpacity(0.2),
                   labelStyle: TextStyle(
-                    color: isSelected ? const Color(0xFF667eea) : Colors.grey[700],
+                    color: isSelected ? const Color(0xFFff5001) : Colors.grey[700],
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),
                   side: BorderSide(
-                    color: isSelected ? const Color(0xFF667eea) : Colors.grey[300]!,
+                    color: isSelected ? const Color(0xFFff5001) : Colors.grey[300]!,
                   ),
                 ),
               );
@@ -305,7 +305,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
                       ),
                       SizedBox(height: 16),
                       Text(
@@ -338,7 +338,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                           ElevatedButton(
                             onPressed: _loadPrograms,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF667eea),
+                              backgroundColor: const Color(0xFFff5001),
                             ),
                             child: const Text(
                               'Coba Lagi',
@@ -532,7 +532,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                       value: persentaseKuota / 100,
                       backgroundColor: Colors.grey[200],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        persentaseKuota > 80 ? Colors.red : const Color(0xFF667eea),
+                        persentaseKuota > 80 ? Colors.red : const Color(0xFFff5001),
                       ),
                       minHeight: 6,
                     ),
@@ -579,7 +579,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                 _showProgramDetails(program);
               } : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -607,7 +607,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
             ),
             SizedBox(height: 16),
             Text(
@@ -652,7 +652,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                 _tabController.animateTo(0);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667eea),
+                backgroundColor: const Color(0xFFff5001),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -713,7 +713,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF667eea),
+                  color: Color(0xFFff5001),
                 ),
               ),
               const Spacer(),
@@ -961,7 +961,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
       case 'Pangan':
         return const Color(0xFFF44336);
       default:
-        return const Color(0xFF667eea);
+        return const Color(0xFFff5001);
     }
   }
 
@@ -981,7 +981,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
       case 'Selesai':
         return const Color(0xFF607D8B);
       default:
-        return const Color(0xFF667eea);
+        return const Color(0xFFff5001);
     }
   }
 
@@ -1081,7 +1081,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                             _showApplicationForm(program, isResubmission: isResubmission, existingApplication: existingApplication);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF667eea),
+                            backgroundColor: const Color(0xFFff5001),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -1173,10 +1173,10 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF667eea).withOpacity(0.1),
+                          color: const Color(0xFFff5001).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF667eea).withOpacity(0.3),
+                            color: const Color(0xFFff5001).withOpacity(0.3),
                           ),
                         ),
                         child: Column(
@@ -1187,7 +1187,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF667eea),
+                                color: Color(0xFFff5001),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -1310,7 +1310,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                              color: Color(0xFF667eea),
+                              color: Color(0xFFff5001),
                               width: 2,
                             ),
                           ),
@@ -1444,7 +1444,7 @@ class _BantuanSosialScreenState extends State<BantuanSosialScreen>
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF667eea),
+                            backgroundColor: const Color(0xFFff5001),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

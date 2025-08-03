@@ -214,7 +214,7 @@ class _EconomicFormScreenState extends State<EconomicFormScreen>
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFFff5001),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -275,12 +275,12 @@ class _EconomicFormScreenState extends State<EconomicFormScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF667eea).withOpacity(0.3),
+            color: const Color(0xFFff5001).withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -365,7 +365,7 @@ class _EconomicFormScreenState extends State<EconomicFormScreen>
             onPressed: _updatePreview,
             icon: const Icon(Icons.preview, size: 18),
             label: const Text('Lihat Preview Status'),
-            style: TextButton.styleFrom(foregroundColor: const Color(0xFF667eea)),
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFff5001)),
           ),
         ),
         
@@ -566,7 +566,7 @@ class _EconomicFormScreenState extends State<EconomicFormScreen>
           child: ElevatedButton(
             onPressed: _isSaving ? null : _saveEconomicData,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
+              backgroundColor: const Color(0xFFff5001),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(

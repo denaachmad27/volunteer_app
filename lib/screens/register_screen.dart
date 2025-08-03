@@ -176,15 +176,17 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF6B73FF),
+              Colors.white,
+              Color(0xFFFFF8F5),
             ],
           ),
         ),
@@ -199,20 +201,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                     position: _slideAnimation,
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 400),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.95),
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 30,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
                       child: Padding(
-                        padding: const EdgeInsets.all(32.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -225,12 +215,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
-                                    color: Color(0xFF667eea),
+                                    color: Color(0xFFff5001),
+                                    size: 20,
                                   ),
                                 ),
                                 const Spacer(),
                               ],
                             ),
+                            
+                            const SizedBox(height: 8),
                             
                             // Logo
                             Container(
@@ -238,17 +231,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                               height: 80,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF667eea),
-                                    Color(0xFF764ba2),
-                                  ],
-                                ),
+                                color: const Color(0xFFff5001),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF667eea).withOpacity(0.3),
-                                    blurRadius: 15,
-                                    spreadRadius: 2,
+                                    color: const Color(0xFFff5001).withOpacity(0.25),
+                                    blurRadius: 20,
+                                    spreadRadius: 0,
+                                    offset: const Offset(0, 8),
                                   ),
                                 ],
                               ),
@@ -259,25 +248,28 @@ class _RegisterScreenState extends State<RegisterScreen>
                               ),
                             ),
                             
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 32),
                             
                             // Title
                             const Text(
                               'Join Us Today',
                               style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
                                 color: Color(0xFF2D3748),
+                                letterSpacing: -0.5,
                               ),
                             ),
                             
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 12),
                             
                             Text(
                               'Start making a difference in your community',
                               style: TextStyle(
                                 fontSize: 16,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.grey[600],
+                                letterSpacing: 0.2,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -430,7 +422,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                             _agreeToTerms = value ?? false;
                                           });
                                         },
-                                        activeColor: const Color(0xFF667eea),
+                                        activeColor: const Color(0xFFff5001),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(4),
                                         ),
@@ -447,7 +439,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                               TextSpan(
                                                 text: 'Terms & Conditions',
                                                 style: TextStyle(
-                                                  color: const Color(0xFF667eea),
+                                                  color: const Color(0xFFff5001),
                                                   fontWeight: FontWeight.w600,
                                                   decoration: TextDecoration.underline,
                                                 ),
@@ -461,7 +453,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                               TextSpan(
                                                 text: 'Privacy Policy',
                                                 style: TextStyle(
-                                                  color: const Color(0xFF667eea),
+                                                  color: const Color(0xFFff5001),
                                                   fontWeight: FontWeight.w600,
                                                   decoration: TextDecoration.underline,
                                                 ),
@@ -482,9 +474,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     child: ElevatedButton(
                                       onPressed: _isLoading ? null : _handleRegister,
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF667eea),
+                                        backgroundColor: const Color(0xFFff5001),
                                         foregroundColor: Colors.white,
                                         elevation: 0,
+                                        shadowColor: const Color(0xFFff5001).withOpacity(0.3),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(16),
                                         ),
@@ -528,7 +521,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         child: const Text(
                                           'Sign In',
                                           style: TextStyle(
-                                            color: Color(0xFF667eea),
+                                            color: Color(0xFFff5001),
                                             fontWeight: FontWeight.w600,
                                             fontSize: 16,
                                           ),
@@ -571,7 +564,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: Color(0xFF667eea),
+                color: Color(0xFFff5001),
               ),
             ),
             SizedBox(width: 12),
@@ -627,26 +620,26 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
       decoration: InputDecoration(
         labelText: 'Anggota Legislatif *',
-        prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.person_outline, color: Colors.grey[500]),
         hintText: 'Pilih Anggota Legislatif',
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey[200]!),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey[200]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFff5001), width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
         filled: true,
@@ -702,34 +695,38 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: const Color(0xFF667eea)),
+        labelStyle: TextStyle(
+          color: Colors.grey[600],
+          fontWeight: FontWeight.w500,
+        ),
+        prefixIcon: Icon(icon, color: Colors.grey[500]),
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
                   isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: const Color(0xFF667eea),
+                  color: Colors.grey[500],
                 ),
                 onPressed: onTogglePassword,
               )
             : null,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey[200]!),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey[200]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFff5001), width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Colors.red),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
         filled: true,

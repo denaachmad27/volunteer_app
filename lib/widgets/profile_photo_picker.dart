@@ -45,12 +45,12 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: const Color(0xFF667eea),
+                color: const Color(0xFFff5001),
                 width: 3,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF667eea).withOpacity(0.2),
+                  color: const Color(0xFFff5001).withOpacity(0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -66,7 +66,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
           onPressed: _showImageSourceDialog,
           icon: const Icon(
             Icons.camera_alt,
-            color: Color(0xFF667eea),
+            color: Color(0xFFff5001),
             size: 18,
           ),
           label: Text(
@@ -74,7 +74,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
                 ? 'Ganti Foto'
                 : 'Tambah Foto',
             style: const TextStyle(
-              color: Color(0xFF667eea),
+              color: Color(0xFFff5001),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -103,7 +103,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
         placeholder: (context, url) => const Center(
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
           ),
         ),
         errorWidget: (context, url, error) {
@@ -125,7 +125,7 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF667eea),
+            Color(0xFFff5001),
             Color(0xFF764ba2),
           ],
         ),
@@ -213,24 +213,24 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
         width: 80,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isDestructive ? Colors.red.shade50 : const Color(0xFF667eea).withOpacity(0.1),
+          color: isDestructive ? Colors.red.shade50 : const Color(0xFFff5001).withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isDestructive ? Colors.red.shade200 : const Color(0xFF667eea).withOpacity(0.3),
+            color: isDestructive ? Colors.red.shade200 : const Color(0xFFff5001).withOpacity(0.3),
           ),
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: isDestructive ? Colors.red : const Color(0xFF667eea),
+              color: isDestructive ? Colors.red : const Color(0xFFff5001),
               size: 30,
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: TextStyle(
-                color: isDestructive ? Colors.red : const Color(0xFF667eea),
+                color: isDestructive ? Colors.red : const Color(0xFFff5001),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

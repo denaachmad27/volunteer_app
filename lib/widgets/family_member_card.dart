@@ -104,7 +104,7 @@ class FamilyMemberCard extends StatelessWidget {
                       value: 'edit',
                       child: Row(
                         children: [
-                          Icon(Icons.edit, size: 18, color: Color(0xFF667eea)),
+                          Icon(Icons.edit, size: 18, color: Color(0xFFff5001)),
                           SizedBox(width: 8),
                           Text('Edit'),
                         ],
