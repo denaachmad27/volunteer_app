@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
   bool _profileCompletionLoading = true;
   Map<String, dynamic>? _profileData;
   bool _profileDataLoading = true;
-  List<LegislativeMember> _legislativeMembers = [];
+  LegislativeMember? _userLegislativeMember;
   bool _legislativeLoading = true;
 
   @override
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen>
     _loadLatestNews();
     _loadProfileCompletion();
     _loadProfileData();
-    _loadLegislativeMembers();
+    _loadUserLegislativeMember();
     _animationController.forward();
     
     // Retry loading news after a short delay if needed
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (mounted) {
       _loadProfileCompletion();
       _loadProfileData();
-      _loadLegislativeMembers();
+      _loadUserLegislativeMember();
     }
   }
 
@@ -182,26 +182,23 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-  Future<void> _loadLegislativeMembers() async {
+  Future<void> _loadUserLegislativeMember() async {
     try {
-      print('=== HOME SCREEN: Loading legislative members ===');
-      final response = await LegislativeService.getActiveLegislativeMembers();
+      print('=== HOME SCREEN: Loading user\'s legislative member ===');
+      final member = await LegislativeService.getUserLegislativeMember();
       
-      if (response.success && response.data.isNotEmpty) {
-        setState(() {
-          // Take only the first member for the card display
-          _legislativeMembers = response.data.take(1).toList();
-          _legislativeLoading = false;
-        });
-        print('=== HOME SCREEN: Legislative members loaded: ${_legislativeMembers.length} ===');
+      setState(() {
+        _userLegislativeMember = member;
+        _legislativeLoading = false;
+      });
+      
+      if (member != null) {
+        print('=== HOME SCREEN: User legislative member loaded: ${member.namaLengkap} ===');
       } else {
-        setState(() {
-          _legislativeLoading = false;
-        });
-        print('=== HOME SCREEN: No legislative members found ===');
+        print('=== HOME SCREEN: No legislative member associated with user ===');
       }
     } catch (e) {
-      print('=== HOME SCREEN: Error loading legislative members: $e ===');
+      print('=== HOME SCREEN: Error loading user legislative member: $e ===');
       setState(() {
         _legislativeLoading = false;
       });
@@ -453,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen>
                             // Legislative Member Card
                             _legislativeLoading
                                 ? const LegislativeMemberCardSkeleton()
-                                : _legislativeMembers.isEmpty
+                                : _userLegislativeMember == null
                                     ? Container(
                                         padding: const EdgeInsets.all(24),
                                         decoration: BoxDecoration(
@@ -470,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             ),
                                             const SizedBox(height: 12),
                                             Text(
-                                              'Belum ada anggota legislatif terdaftar',
+                                              'Belum ada anggota legislatif yang dipilih',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.grey[600],
@@ -479,15 +476,15 @@ class _HomeScreenState extends State<HomeScreen>
                                             ),
                                             const SizedBox(height: 8),
                                             TextButton(
-                                              onPressed: _loadLegislativeMembers,
+                                              onPressed: _loadUserLegislativeMember,
                                               child: const Text('Coba Lagi'),
                                             ),
                                           ],
                                         ),
                                       )
                                     : LegislativeMemberCard(
-                                        member: _legislativeMembers.first,
-                                        onTap: () => _navigateToLegislativeMemberDetail(_legislativeMembers.first.id),
+                                        member: _userLegislativeMember!,
+                                        onTap: () => _navigateToLegislativeMemberDetail(_userLegislativeMember!.id),
                                       ),
                             
                             const SizedBox(height: 32),

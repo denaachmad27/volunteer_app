@@ -32,6 +32,36 @@ class LegislativeService {
     }
   }
 
+  static Future<LegislativeMember?> getUserLegislativeMember() async {
+    try {
+      print('=== LEGISLATIVE SERVICE: Fetching user\'s selected legislative member ===');
+      
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/my-legislative-member'),
+        headers: await ApiService.getHeaders(),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == 'success' && data['data'] != null) {
+          return LegislativeMember.fromJson(data['data']);
+        }
+      } else if (response.statusCode == 404) {
+        print('User has no associated legislative member');
+        return null;
+      } else {
+        throw Exception('Failed to load user legislative member: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in getUserLegislativeMember: $e');
+      throw Exception('Failed to load user legislative member: $e');
+    }
+    return null;
+  }
+
   static Future<LegislativeMemberDetailResponse> getLegislativeMemberDetail(int id) async {
     try {
       print('=== LEGISLATIVE SERVICE: Fetching legislative member detail for ID: $id ===');
