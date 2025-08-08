@@ -11,7 +11,7 @@ class CustomDateField extends StatelessWidget {
   final DateTime? lastDate;
 
   const CustomDateField({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.validator,
@@ -20,7 +20,7 @@ class CustomDateField extends StatelessWidget {
     this.isRequired = false,
     this.firstDate,
     this.lastDate,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

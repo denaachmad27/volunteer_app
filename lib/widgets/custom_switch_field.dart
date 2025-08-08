@@ -8,13 +8,13 @@ class CustomSwitchField extends StatelessWidget {
   final IconData? icon;
 
   const CustomSwitchField({
-    Key? key,
+    super.key,
     required this.label,
     this.subtitle,
     required this.value,
     required this.onChanged,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

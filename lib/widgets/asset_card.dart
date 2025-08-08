@@ -8,12 +8,12 @@ class AssetCard extends StatelessWidget {
   final List<AssetItem> items;
 
   const AssetCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.color,
     required this.items,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

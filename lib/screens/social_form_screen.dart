@@ -9,7 +9,7 @@ import '../widgets/custom_date_field.dart';
 class SocialFormScreen extends StatefulWidget {
   final Map<String, dynamic>? socialData;
 
-  const SocialFormScreen({Key? key, this.socialData}) : super(key: key);
+  const SocialFormScreen({super.key, this.socialData});
 
   @override
   State<SocialFormScreen> createState() => _SocialFormScreenState();

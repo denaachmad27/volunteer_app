@@ -9,7 +9,7 @@ import '../widgets/custom_switch_field.dart';
 class FamilyFormScreen extends StatefulWidget {
   final Map<String, dynamic>? familyMember;
 
-  const FamilyFormScreen({Key? key, this.familyMember}) : super(key: key);
+  const FamilyFormScreen({super.key, this.familyMember});
 
   @override
   State<FamilyFormScreen> createState() => _FamilyFormScreenState();

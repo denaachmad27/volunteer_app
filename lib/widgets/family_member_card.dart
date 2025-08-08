@@ -8,12 +8,12 @@ class FamilyMemberCard extends StatelessWidget {
   final bool showActions;
 
   const FamilyMemberCard({
-    Key? key,
+    super.key,
     required this.familyMember,
     this.onEdit,
     this.onDelete,
     this.showActions = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

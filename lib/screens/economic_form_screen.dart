@@ -9,7 +9,7 @@ import '../widgets/economic_status_card.dart';
 class EconomicFormScreen extends StatefulWidget {
   final Map<String, dynamic>? economicData;
 
-  const EconomicFormScreen({Key? key, this.economicData}) : super(key: key);
+  const EconomicFormScreen({super.key, this.economicData});
 
   @override
   State<EconomicFormScreen> createState() => _EconomicFormScreenState();

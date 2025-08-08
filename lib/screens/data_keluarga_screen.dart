@@ -5,7 +5,7 @@ import '../widgets/family_member_card.dart';
 import 'family_form_screen.dart';
 
 class DataKeluargaScreen extends StatefulWidget {
-  const DataKeluargaScreen({Key? key}) : super(key: key);
+  const DataKeluargaScreen({super.key});
 
   @override
   State<DataKeluargaScreen> createState() => _DataKeluargaScreenState();

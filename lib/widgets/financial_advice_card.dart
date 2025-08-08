@@ -4,9 +4,9 @@ class FinancialAdviceCard extends StatelessWidget {
   final List<String> adviceList;
 
   const FinancialAdviceCard({
-    Key? key,
+    super.key,
     required this.adviceList,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class FinancialAdviceCard extends StatelessWidget {
               padding: EdgeInsets.only(bottom: index < adviceList.length - 1 ? 12 : 0),
               child: _buildAdviceItem(advice, index + 1),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

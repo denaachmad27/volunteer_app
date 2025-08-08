@@ -4,7 +4,7 @@ import '../services/social_service.dart';
 import 'social_form_screen.dart';
 
 class DataSosialScreen extends StatefulWidget {
-  const DataSosialScreen({Key? key}) : super(key: key);
+  const DataSosialScreen({super.key});
 
   @override
   State<DataSosialScreen> createState() => _DataSosialScreenState();
@@ -902,7 +902,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
                 ),
               ],
             ),
-          )).toList(),
+          )),
         ],
       ),
     );

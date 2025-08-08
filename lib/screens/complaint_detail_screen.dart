@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/complaint_service.dart';
-import '../services/api_service.dart';
 import '../widgets/reliable_network_image.dart';
 
 class ComplaintDetailScreen extends StatefulWidget {

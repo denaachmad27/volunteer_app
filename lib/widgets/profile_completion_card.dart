@@ -12,7 +12,7 @@ class ProfileCompletionCard extends StatelessWidget {
   final VoidCallback? onRefresh;
 
   const ProfileCompletionCard({
-    Key? key,
+    super.key,
     required this.percentage,
     required this.completedSections,
     required this.totalSections,
@@ -21,7 +21,7 @@ class ProfileCompletionCard extends StatelessWidget {
     required this.isComplete,
     required this.message,
     this.onRefresh,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

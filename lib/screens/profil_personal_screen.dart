@@ -9,7 +9,7 @@ import '../widgets/custom_date_field.dart';
 import '../widgets/profile_photo_picker.dart';
 
 class ProfilPersonalScreen extends StatefulWidget {
-  const ProfilPersonalScreen({Key? key}) : super(key: key);
+  const ProfilPersonalScreen({super.key});
 
   @override
   State<ProfilPersonalScreen> createState() => _ProfilPersonalScreenState();

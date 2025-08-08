@@ -7,11 +7,11 @@ class EconomicStatusCard extends StatelessWidget {
   final bool showDetails;
 
   const EconomicStatusCard({
-    Key? key,
+    super.key,
     required this.penghasilan,
     required this.pengeluaran,
     this.showDetails = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

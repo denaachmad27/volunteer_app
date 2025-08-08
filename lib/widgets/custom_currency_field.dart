@@ -12,7 +12,7 @@ class CustomCurrencyField extends StatefulWidget {
   final double? initialValue;
 
   const CustomCurrencyField({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.validator,
@@ -20,7 +20,7 @@ class CustomCurrencyField extends StatefulWidget {
     this.prefixIcon,
     this.isRequired = false,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomCurrencyField> createState() => _CustomCurrencyFieldState();

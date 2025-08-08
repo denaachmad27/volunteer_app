@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/complaint_service.dart';
-import '../services/api_service.dart';
 import '../widgets/reliable_network_image.dart';
 import 'complaint_detail_screen.dart';
 

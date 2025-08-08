@@ -7,7 +7,7 @@ import '../widgets/financial_advice_card.dart';
 import 'economic_form_screen.dart';
 
 class DataEkonomiScreen extends StatefulWidget {
-  const DataEkonomiScreen({Key? key}) : super(key: key);
+  const DataEkonomiScreen({super.key});
 
   @override
   State<DataEkonomiScreen> createState() => _DataEkonomiScreenState();
