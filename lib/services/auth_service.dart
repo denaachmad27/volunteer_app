@@ -7,6 +7,8 @@ class User {
   final String name;
   final String email;
   final String role;
+  final int? anggotaLegislatifId;
+  final String? phone;
   final DateTime? emailVerifiedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -16,6 +18,8 @@ class User {
     required this.name,
     required this.email,
     required this.role,
+    this.anggotaLegislatifId,
+    this.phone,
     this.emailVerifiedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -27,6 +31,8 @@ class User {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? 'user',
+      anggotaLegislatifId: json['anggota_legislatif_id'],
+      phone: json['phone'],
       emailVerifiedAt: json['email_verified_at'] != null 
           ? DateTime.parse(json['email_verified_at'])
           : null,
@@ -41,6 +47,8 @@ class User {
       'name': name,
       'email': email,
       'role': role,
+      'anggota_legislatif_id': anggotaLegislatifId,
+      'phone': phone,
       'email_verified_at': emailVerifiedAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

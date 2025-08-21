@@ -131,7 +131,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                             child: !_profileDataLoading && _profileData != null && _profileData!['foto_profil'] != null
                                 ? ClipOval(
                                     child: CachedNetworkImage(
-                                      imageUrl: ProfileService.getProfilePhotoUrl(_profileData!['foto_profil']),
+                                      imageUrl: ProfileService.getProfilePhotoUrl(
+                                        _profileData!['foto_profil'],
+                                        version: _profileData!['updated_at']?.toString(),
+                                      ),
                                       width: 60,
                                       height: 60,
                                       fit: BoxFit.cover,
@@ -252,7 +255,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                               icon: Icons.assignment_ind_outlined,
                               title: 'Lengkapi Profil',
                               subtitle: 'Lengkapi data profil personal',
-                              onTap: () => context.push('/profil-personal'),
+                              onTap: () async {
+                                await context.push('/profil-personal');
+                                if (mounted) {
+                                  _loadProfileData();
+                                }
+                              },
                             ),
                             _buildMenuItem(
                               icon: Icons.family_restroom_outlined,
@@ -702,6 +710,74 @@ class _SettingsScreenState extends State<SettingsScreen>
     _showComingSoonDialog('Syarat & Ketentuan');
   }
 
+  Future<void> _performLogout() async {
+    // Show loading overlay
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) => PopScope(
+        canPop: false,
+        child: const Center(
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Logging out...'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    
+    try {
+      // Perform logout
+      final success = await AuthService.logout();
+      
+      if (success) {
+        // Navigate to login without trying to close loading dialog
+        // The dialog will be automatically dismissed when the route changes
+        if (mounted) {
+          context.go('/login');
+        }
+      } else {
+        // Handle logout failure
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).pop(); // Close loading
+          _showErrorSnackBar('Gagal logout. Silakan coba lagi.');
+        }
+      }
+    } catch (e) {
+      // Handle exceptions
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop(); // Close loading
+        _showErrorSnackBar('Terjadi kesalahan saat logout: $e');
+      }
+    }
+  }
+  
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
   void _handleLogout() async {
     showDialog(
       context: context,
@@ -735,34 +811,13 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context); // Close dialog
+              final navigator = Navigator.of(context);
               
-              // Show loading
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
+              // Close confirmation dialog first
+              navigator.pop();
               
-              try {
-                await AuthService.logout();
-                if (mounted) {
-                  Navigator.pop(context); // Close loading
-                  context.go('/login');
-                }
-              } catch (e) {
-                if (mounted) {
-                  Navigator.pop(context); // Close loading
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Gagal logout: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
+              // Use a simpler approach: directly perform logout and navigate
+              await _performLogout();
             },
             child: const Text(
               'Logout',

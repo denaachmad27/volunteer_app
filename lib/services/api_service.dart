@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // Use 10.0.2.2:8000 for Android emulator to access host machine
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
-  static const String storageUrl = 'http://10.0.2.2:8000/storage';
+  // Base URL dapat di-override via --dart-define=API_BASE_URL, STORAGE_BASE_URL saat build
+  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8000/api');
+  static const String storageUrl = String.fromEnvironment('STORAGE_BASE_URL', defaultValue: 'http://10.0.2.2:8000/storage');
   
   // Helper method to get complete image URL
   static String getImageUrl(String? imagePath) {
@@ -48,10 +48,12 @@ class ApiService {
   static Future<http.Response> get(String endpoint) async {
     final headers = await getHeaders();
     final uri = Uri.parse('$baseUrl$endpoint');
-    
-    print('=== API GET Request ===');
-    print('URL: $uri');
-    print('Headers: $headers');
+
+    const bool kEnableNetworkLogging = false; // set true hanya untuk debug lokal
+    if (kEnableNetworkLogging) {
+      print('=== API GET Request ===');
+      print('URL: $uri');
+    }
     
     try {
       final response = await http.get(
@@ -64,14 +66,18 @@ class ApiService {
         },
       );
       
-      print('=== API Response ===');
-      print('Status: ${response.statusCode}');
-      print('Body length: ${response.body.length}');
+      if (kEnableNetworkLogging) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Body length: ${response.body.length}');
+      }
       
       return response;
     } catch (e) {
-      print('=== API Error ===');
-      print('Error: $e');
+      if (kEnableNetworkLogging) {
+        print('=== API Error ===');
+        print('Error: $e');
+      }
       
       if (e.toString().contains('Connection refused')) {
         throw Exception('Connection refused: Tidak dapat terhubung ke server. Pastikan Laravel backend berjalan di localhost:8000');
@@ -90,11 +96,12 @@ class ApiService {
     final headers = await getHeaders();
     final uri = Uri.parse('$baseUrl$endpoint');
     
-    // Debug logging
-    print('=== API POST Request ===');
-    print('URL: $uri');
-    print('Headers: $headers');
-    print('Body: ${jsonEncode(data)}');
+    const bool kEnableNetworkLogging = false;
+    if (kEnableNetworkLogging) {
+      print('=== API POST Request ===');
+      print('URL: $uri');
+      print('Body: ${jsonEncode(data)}');
+    }
     
     try {
       final response = await http.post(
@@ -103,15 +110,18 @@ class ApiService {
         body: jsonEncode(data),
       );
       
-      // Debug response
-      print('=== API Response ===');
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      if (kEnableNetworkLogging) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Body: ${response.body}');
+      }
       
       return response;
     } catch (e) {
-      print('=== API Error ===');
-      print('Error: $e');
+      if (kEnableNetworkLogging) {
+        print('=== API Error ===');
+        print('Error: $e');
+      }
       throw Exception('Network error: $e');
     }
   }
@@ -121,11 +131,12 @@ class ApiService {
     final headers = await getHeaders();
     final uri = Uri.parse('$baseUrl$endpoint');
     
-    // Debug logging
-    print('=== API PUT Request ===');
-    print('URL: $uri');
-    print('Headers: $headers');
-    print('Body: ${jsonEncode(data)}');
+    const bool kEnableNetworkLogging = false;
+    if (kEnableNetworkLogging) {
+      print('=== API PUT Request ===');
+      print('URL: $uri');
+      print('Body: ${jsonEncode(data)}');
+    }
     
     try {
       final response = await http.put(
@@ -134,15 +145,18 @@ class ApiService {
         body: jsonEncode(data),
       );
       
-      // Debug response
-      print('=== API Response ===');
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      if (kEnableNetworkLogging) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Body: ${response.body}');
+      }
       
       return response;
     } catch (e) {
-      print('=== API Error ===');
-      print('Error: $e');
+      if (kEnableNetworkLogging) {
+        print('=== API Error ===');
+        print('Error: $e');
+      }
       throw Exception('Network error: $e');
     }
   }
@@ -152,10 +166,11 @@ class ApiService {
     final headers = await getHeaders();
     final uri = Uri.parse('$baseUrl$endpoint');
     
-    // Debug logging
-    print('=== API DELETE Request ===');
-    print('URL: $uri');
-    print('Headers: $headers');
+    const bool kEnableNetworkLogging = false;
+    if (kEnableNetworkLogging) {
+      print('=== API DELETE Request ===');
+      print('URL: $uri');
+    }
     
     try {
       final response = await http.delete(
@@ -163,24 +178,30 @@ class ApiService {
         headers: headers,
       );
       
-      // Debug response
-      print('=== API Response ===');
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      if (kEnableNetworkLogging) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Body: ${response.body}');
+      }
       
       return response;
     } catch (e) {
-      print('=== API Error ===');
-      print('Error: $e');
+      if (kEnableNetworkLogging) {
+        print('=== API Error ===');
+        print('Error: $e');
+      }
       throw Exception('Network error: $e');
     }
   }
   
   // Parse JSON response
   static Map<String, dynamic> parseResponse(http.Response response) {
-    print('=== API Response ===');
-    print('Status Code: ${response.statusCode}');
-    print('Response Body: ${response.body}');
+    const bool kEnableNetworkLogging = false;
+    if (kEnableNetworkLogging) {
+      print('=== API Response ===');
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+    }
     
     final responseBody = jsonDecode(response.body);
     

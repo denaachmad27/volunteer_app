@@ -14,15 +14,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  final GlobalKey _homeKey = GlobalKey();
   
   void _changeTab(int index) {
     setState(() {
       _currentIndex = index;
     });
+
+    // When switching to Home tab, refresh the profile data
+    if (index == 0) {
+      final state = _homeKey.currentState;
+      try {
+        (state as dynamic)?.refreshProfile();
+      } catch (_) {}
+    }
   }
   
   List<Widget> get _screens => [
-    HomeScreen(onTabChange: _changeTab),
+    HomeScreen(key: _homeKey, onTabChange: _changeTab),
     const HistoryScreen(),
     const QuickComplaintScreen(),
     const NotificationScreen(),

@@ -49,8 +49,8 @@ class _HistoryScreenState extends State<HistoryScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
+              Color(0xFFff5001),
+              Color(0xFFe64100),
             ],
           ),
         ),
@@ -69,9 +69,9 @@ class _HistoryScreenState extends State<HistoryScreen>
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
@@ -112,7 +112,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: TabBar(
@@ -120,7 +120,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.white70,
                     indicator: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -221,7 +221,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -237,17 +237,17 @@ class _HistoryScreenState extends State<HistoryScreen>
               children: [
                 Text(
                   item['no_pendaftaran'],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF667eea),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -365,9 +365,9 @@ class _HistoryScreenState extends State<HistoryScreen>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue[200]!),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,7 +377,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         Icon(
                           Icons.admin_panel_settings_outlined,
                           size: 16,
-                          color: Colors.blue[600],
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -385,7 +385,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Colors.blue[600],
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -395,7 +395,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       item['catatan_admin'],
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.blue[800],
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -465,7 +465,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -481,17 +481,17 @@ class _HistoryScreenState extends State<HistoryScreen>
               children: [
                 Text(
                   item['no_tiket'],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF667eea),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getComplaintStatusColor(item['status']).withOpacity(0.1),
+                    color: _getComplaintStatusColor(item['status']).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -526,7 +526,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getCategoryColor(item['kategori']).withOpacity(0.1),
+                    color: _getCategoryColor(item['kategori']).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -542,7 +542,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getPriorityColor(item['prioritas']).withOpacity(0.1),
+                    color: _getPriorityColor(item['prioritas']).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -627,9 +627,9 @@ class _HistoryScreenState extends State<HistoryScreen>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue[200]!),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,7 +639,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                         Icon(
                           Icons.admin_panel_settings_outlined,
                           size: 16,
-                          color: Colors.blue[600],
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -647,7 +647,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Colors.blue[600],
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -657,7 +657,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       item['respon_admin'],
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.blue[800],
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -706,7 +706,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       case 'Selesai':
         return const Color(0xFF607D8B);
       default:
-        return const Color(0xFF667eea);
+        return Theme.of(context).colorScheme.primary;
     }
   }
 
@@ -721,7 +721,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       case 'Ditutup':
         return const Color(0xFF607D8B);
       default:
-        return const Color(0xFF667eea);
+        return Theme.of(context).colorScheme.primary;
     }
   }
 
@@ -738,7 +738,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       case 'Keamanan':
         return const Color(0xFFF44336);
       default:
-        return const Color(0xFF9C27B0);
+        return Theme.of(context).colorScheme.primary;
     }
   }
 
@@ -753,7 +753,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       case 'Urgent':
         return const Color(0xFF9C27B0);
       default:
-        return const Color(0xFF667eea);
+        return Theme.of(context).colorScheme.primary;
     }
   }
 

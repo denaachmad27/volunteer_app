@@ -210,6 +210,13 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+  // Expose a safe refresh method for parent widgets
+  void refreshProfile() {
+    if (mounted) {
+      _loadProfileData();
+    }
+  }
+
   void _navigateToTab(int tabIndex) {
     if (widget.onTabChange != null) {
       widget.onTabChange!(tabIndex);
@@ -261,7 +268,10 @@ class _HomeScreenState extends State<HomeScreen>
                         child: !_profileDataLoading && _profileData != null && _profileData!['foto_profil'] != null
                             ? ClipOval(
                                 child: CachedNetworkImage(
-                                  imageUrl: ProfileService.getProfilePhotoUrl(_profileData!['foto_profil']),
+                                  imageUrl: ProfileService.getProfilePhotoUrl(
+                                    _profileData!['foto_profil'],
+                                    version: _profileData!['updated_at']?.toString(),
+                                  ),
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
@@ -502,6 +512,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                                 TextButton(
                                   onPressed: () => _navigateToScreen(const NewsScreen()),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: const Color(0xFFff5001),
+                                  ),
                                   child: const Text('Lihat Semua'),
                                 ),
                               ],

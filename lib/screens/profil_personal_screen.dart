@@ -255,6 +255,7 @@ class _ProfilPersonalScreenState extends State<ProfilPersonalScreen>
                   Center(
                     child: ProfilePhotoPicker(
                       currentPhotoUrl: _existingProfile?['foto_profil'],
+                      currentPhotoUpdatedAt: _existingProfile?['updated_at']?.toString(),
                       onPhotoSelected: (photo) {
                         setState(() {
                           _selectedPhoto = photo;

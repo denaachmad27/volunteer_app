@@ -64,6 +64,9 @@ class ProfileService {
   // Upload profile photo
   static Future<Map<String, dynamic>> uploadProfilePhoto(File imageFile) async {
     try {
+      if (!await imageFile.exists()) {
+        throw Exception('File foto tidak ditemukan: ${imageFile.path}');
+      }
       final token = await ApiService.getToken();
       final uri = Uri.parse('${ApiService.baseUrl}/profile/photo');
       
@@ -98,16 +101,24 @@ class ProfileService {
     }
   }
   
-  // Get profile photo URL
-  static String getProfilePhotoUrl(String? photoPath) {
+  // Get profile photo URL with optional cache-busting version
+  static String getProfilePhotoUrl(String? photoPath, {String? version}) {
     if (photoPath == null || photoPath.isEmpty) return '';
-    
+
+    String baseUrl;
     // If photo path is just filename, add profile_photos directory
     if (!photoPath.contains('profile_photos/')) {
-      return '${ApiService.storageUrl}/profile_photos/$photoPath';
+      baseUrl = '${ApiService.storageUrl}/profile_photos/$photoPath';
+    } else {
+      baseUrl = '${ApiService.storageUrl}/$photoPath';
     }
-    
-    return '${ApiService.storageUrl}/$photoPath';
+
+    if (version != null && version.isNotEmpty) {
+      final sep = baseUrl.contains('?') ? '&' : '?';
+      return '$baseUrl${sep}v=${Uri.encodeComponent(version)}';
+    }
+
+    return baseUrl;
   }
   
   // Validation helpers

@@ -2,16 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import '../services/profile_service.dart';
 
 class ProfilePhotoPicker extends StatefulWidget {
   final String? currentPhotoUrl;
+  final String? currentPhotoUpdatedAt;
   final Function(File?) onPhotoSelected;
   final double size;
 
   const ProfilePhotoPicker({
     super.key,
     this.currentPhotoUrl,
+    this.currentPhotoUpdatedAt,
     required this.onPhotoSelected,
     this.size = 120,
   });
@@ -93,7 +97,10 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
         height: widget.size,
       );
     } else if (widget.currentPhotoUrl != null && widget.currentPhotoUrl!.isNotEmpty) {
-      final imageUrl = ProfileService.getProfilePhotoUrl(widget.currentPhotoUrl!);
+      final imageUrl = ProfileService.getProfilePhotoUrl(
+        widget.currentPhotoUrl!,
+        version: widget.currentPhotoUpdatedAt,
+      );
       print('ProfilePhotoPicker: Loading image from URL: $imageUrl');
       return CachedNetworkImage(
         imageUrl: imageUrl,
@@ -251,10 +258,26 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
       );
 
       if (image != null) {
-        setState(() {
-          _selectedImage = File(image.path);
-        });
-        widget.onPhotoSelected(_selectedImage);
+        final original = File(image.path);
+        try {
+          // Copy to app-managed temp directory to avoid ephemeral cache deletion
+          final tempDir = await getTemporaryDirectory();
+          final ext = p.extension(image.path).isNotEmpty ? p.extension(image.path) : '.jpg';
+          final fileName = 'profile_${DateTime.now().millisecondsSinceEpoch}$ext';
+          final savedPath = p.join(tempDir.path, fileName);
+          final persistent = await original.copy(savedPath);
+
+          setState(() {
+            _selectedImage = persistent;
+          });
+          widget.onPhotoSelected(_selectedImage);
+        } catch (copyError) {
+          // Fallback: use original path
+          setState(() {
+            _selectedImage = original;
+          });
+          widget.onPhotoSelected(_selectedImage);
+        }
       }
     } catch (e) {
       if (mounted) {
