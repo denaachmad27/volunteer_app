@@ -4,13 +4,13 @@ REM Build Script untuk Production APK
 REM Volunteer Management App
 REM ========================================
 REM Menggunakan flutter_dotenv untuk load .env.production
-REM Server: http://103.150.197.76
+REM Server: https://volunteer-bansos.duckdns.org
 REM ========================================
 
 echo ========================================
 echo Building Production APK
 echo Environment: PRODUCTION
-echo Server: http://103.150.197.76
+echo Server: https://volunteer-bansos.duckdns.org
 echo ========================================
 echo.
 
@@ -59,8 +59,8 @@ echo   Via USB:  Copy APK to phone and install manually
 echo.
 echo ========================================
 echo Environment Configuration:
-echo   API_BASE_URL: http://103.150.197.76/api
-echo   STORAGE_BASE_URL: http://103.150.197.76/storage
+echo   API_BASE_URL: https://volunteer-bansos.duckdns.org/api
+echo   STORAGE_BASE_URL: https://volunteer-bansos.duckdns.org/storage
 echo ========================================
 echo.
 

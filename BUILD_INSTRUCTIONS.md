@@ -28,10 +28,10 @@ type .env.production
 Output yang benar:
 ```
 # Production Environment Configuration
-# Server IP: 103.150.197.76
+# Server Domain: volunteer-bansos.duckdns.org (SSL/HTTPS enabled)
 
-API_BASE_URL=http://103.150.197.76/api
-STORAGE_BASE_URL=http://103.150.197.76/storage
+API_BASE_URL=https://volunteer-bansos.duckdns.org/api
+STORAGE_BASE_URL=https://volunteer-bansos.duckdns.org/storage
 ```
 
 ### Step 4: Build APK Release
@@ -119,10 +119,10 @@ type .env.production
 Jika tidak ada, buat file dengan content:
 ```env
 # Production Environment Configuration
-# Server IP: 103.150.197.76
+# Server Domain: volunteer-bansos.duckdns.org (SSL/HTTPS enabled)
 
-API_BASE_URL=http://103.150.197.76/api
-STORAGE_BASE_URL=http://103.150.197.76/storage
+API_BASE_URL=https://volunteer-bansos.duckdns.org/api
+STORAGE_BASE_URL=https://volunteer-bansos.duckdns.org/storage
 ```
 
 ---
@@ -168,8 +168,8 @@ adb logcat | findstr "Loaded .env"
 Output yang benar:
 ```
 ✅ Loaded .env.production
-API_BASE_URL: http://103.150.197.76/api
-STORAGE_BASE_URL: http://103.150.197.76/storage
+API_BASE_URL: https://volunteer-bansos.duckdns.org/api
+STORAGE_BASE_URL: https://volunteer-bansos.duckdns.org/storage
 ```
 
 Jika masih muncul `10.0.2.2`, berarti APK belum ter-build dengan benar.
