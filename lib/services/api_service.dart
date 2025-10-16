@@ -1,11 +1,38 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
-  // Base URL dapat di-override via --dart-define=API_BASE_URL, STORAGE_BASE_URL saat build
-  static const String baseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8000/api');
-  static const String storageUrl = String.fromEnvironment('STORAGE_BASE_URL', defaultValue: 'http://10.0.2.2:8000/storage');
+  // Base URL menggunakan flutter_dotenv untuk load dari .env file
+  // Fallback ke environment variable atau default development
+  static String get baseUrl {
+    // Priority 1: Dari .env file (production/development)
+    if (dotenv.env['API_BASE_URL'] != null && dotenv.env['API_BASE_URL']!.isNotEmpty) {
+      return dotenv.env['API_BASE_URL']!;
+    }
+    // Priority 2: Dari dart-define (build time)
+    const buildTimeUrl = String.fromEnvironment('API_BASE_URL');
+    if (buildTimeUrl.isNotEmpty) {
+      return buildTimeUrl;
+    }
+    // Priority 3: Default development
+    return 'http://10.0.2.2:8000/api';
+  }
+
+  static String get storageUrl {
+    // Priority 1: Dari .env file (production/development)
+    if (dotenv.env['STORAGE_BASE_URL'] != null && dotenv.env['STORAGE_BASE_URL']!.isNotEmpty) {
+      return dotenv.env['STORAGE_BASE_URL']!;
+    }
+    // Priority 2: Dari dart-define (build time)
+    const buildTimeUrl = String.fromEnvironment('STORAGE_BASE_URL');
+    if (buildTimeUrl.isNotEmpty) {
+      return buildTimeUrl;
+    }
+    // Priority 3: Default development
+    return 'http://10.0.2.2:8000/storage';
+  }
   
   // Helper method to get complete image URL
   static String getImageUrl(String? imagePath) {

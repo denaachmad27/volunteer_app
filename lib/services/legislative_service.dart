@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'api_service.dart';
 
 class LegislativeService {
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  // Use ApiService.baseUrl untuk menggunakan konfigurasi yang sama
+  static String get baseUrl => ApiService.baseUrl;
 
   static Future<LegislativeResponse> getActiveLegislativeMembers() async {
     try {
@@ -93,13 +94,13 @@ class LegislativeService {
     if (photoPath == null || photoPath.isEmpty) {
       return '';
     }
-    
+
     // Remove 'public/' prefix if it exists in the path
-    String cleanPath = photoPath.startsWith('public/') 
-        ? photoPath.substring(7) 
+    String cleanPath = photoPath.startsWith('public/')
+        ? photoPath.substring(7)
         : photoPath;
-    
-    return 'http://10.0.2.2:8000/storage/$cleanPath';
+
+    return '${ApiService.storageUrl}/$cleanPath';
   }
 
   static String formatPhoneNumber(String phone) {

@@ -1,0 +1,66 @@
+================================================================================
+  FLUTTER APP - QUICK INSTALL GUIDE
+  Volunteer Management System
+================================================================================
+
+📱 APK FILES LOCATION:
+   C:\Projects\volunteer\volunteer_app\build\app\outputs\flutter-apk\
+
+📦 RECOMMENDED APK (Smallest):
+   app-arm64-v8a-release.apk (18.3 MB)
+   → Untuk most modern Android phones
+
+📦 UNIVERSAL APK (All devices):
+   app-release.apk (52 MB)
+   → Jika tidak yakin device architecture
+
+================================================================================
+
+🔧 INSTALLATION:
+
+1. TRANSFER FILE:
+   - Copy APK file ke Android phone
+   - Buka file di phone
+   - Tap "Install"
+   - (Enable "Install from Unknown Sources" jika diminta)
+
+2. VIA ADB (Developer):
+   adb install build\app\outputs\flutter-apk\app-arm64-v8a-release.apk
+
+================================================================================
+
+🌐 SERVER:
+   API: http://103.150.197.76/api
+
+🔐 LOGIN (Testing):
+   Email: admin@volunteer.com
+   Password: password123
+
+================================================================================
+
+🔄 REBUILD APK:
+
+   Windows:
+   > build_production.bat
+
+   Manual:
+   > flutter build apk --release --split-per-abi ^
+     --dart-define=API_BASE_URL=http://103.150.197.76/api ^
+     --dart-define=STORAGE_BASE_URL=http://103.150.197.76/storage
+
+================================================================================
+
+✅ CHECKLIST AFTER INSTALL:
+   [ ] App terbuka
+   [ ] Login berhasil
+   [ ] Dashboard tampil
+   [ ] Gambar load
+   [ ] Data sync dengan server
+
+================================================================================
+
+📚 FULL DOCUMENTATION:
+   - README_DEPLOYMENT.md (Panduan lengkap deployment)
+   - FLUTTER_APP_DEPLOYMENT_SUMMARY.md (Build summary)
+
+================================================================================

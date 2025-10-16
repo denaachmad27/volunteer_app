@@ -848,12 +848,56 @@ class NewsDetailScreen extends StatelessWidget {
                       ],
                     ),
                     
+                    const SizedBox(height: 16),
+
+                    // Tags
+                    if (news.tags.isNotEmpty)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: news.tags.map((tag) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFff5001).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: const Color(0xFFff5001).withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.local_offer,
+                                  size: 14,
+                                  color: Color(0xFFff5001),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  tag,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFFff5001),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
                     const SizedBox(height: 24),
-                    
+
                     const Divider(),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Content
                     Text(
                       news.konten,

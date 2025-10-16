@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/api_service.dart';
 
 class ReliableNetworkImage extends StatefulWidget {
   final String? imagePath;
@@ -46,29 +47,21 @@ class _ReliableNetworkImageState extends State<ReliableNetworkImage> {
     }
 
     final cleanPath = path.startsWith('/') ? path.substring(1) : path;
-    
-    // Use Laravel storage link path with fallback URLs
+
+    // Use ApiService.storageUrl untuk menggunakan konfigurasi yang sama
     if (cleanPath.startsWith('news_images/')) {
       _urlsToTry = [
-        'http://10.0.2.2:8000/storage/$cleanPath',
-        'http://127.0.0.1:8000/storage/$cleanPath',
-        'http://localhost:8000/storage/$cleanPath',
+        '${ApiService.storageUrl}/$cleanPath',
       ];
     } else if (cleanPath.startsWith('complaint_images/')) {
       _urlsToTry = [
-        'http://10.0.2.2:8000/storage/$cleanPath',
-        'http://127.0.0.1:8000/storage/$cleanPath',
-        'http://localhost:8000/storage/$cleanPath',
+        '${ApiService.storageUrl}/$cleanPath',
       ];
     } else {
       // Try both news and complaint directories as fallback
       _urlsToTry = [
-        'http://10.0.2.2:8000/storage/complaint_images/$cleanPath',
-        'http://127.0.0.1:8000/storage/complaint_images/$cleanPath',
-        'http://localhost:8000/storage/complaint_images/$cleanPath',
-        'http://10.0.2.2:8000/storage/news_images/$cleanPath',
-        'http://127.0.0.1:8000/storage/news_images/$cleanPath',
-        'http://localhost:8000/storage/news_images/$cleanPath',
+        '${ApiService.storageUrl}/complaint_images/$cleanPath',
+        '${ApiService.storageUrl}/news_images/$cleanPath',
       ];
     }
 

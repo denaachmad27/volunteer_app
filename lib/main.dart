@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
@@ -10,7 +11,29 @@ import 'screens/data_ekonomi_screen.dart';
 import 'screens/data_sosial_screen.dart';
 import 'screens/legislative_member_detail_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables from .env file
+  // Gunakan .env.production untuk production build
+  // Gunakan .env.development untuk development
+  try {
+    // Try to load production env first
+    await dotenv.load(fileName: ".env.production");
+    debugPrint('✅ Loaded .env.production');
+    debugPrint('API_BASE_URL: ${dotenv.env['API_BASE_URL']}');
+    debugPrint('STORAGE_BASE_URL: ${dotenv.env['STORAGE_BASE_URL']}');
+  } catch (e) {
+    // Fallback to development env
+    try {
+      await dotenv.load(fileName: ".env.development");
+      debugPrint('✅ Loaded .env.development');
+      debugPrint('API_BASE_URL: ${dotenv.env['API_BASE_URL']}');
+    } catch (e) {
+      debugPrint('⚠️ No .env file found, using default values');
+    }
+  }
+
   runApp(VolunteerApp());
 }
 

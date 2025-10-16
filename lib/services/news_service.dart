@@ -14,6 +14,7 @@ class NewsItem {
   final bool isPublished;
   final String? excerpt;
   final int? readingTime;
+  final List<String> tags;
 
   NewsItem({
     required this.id,
@@ -28,6 +29,7 @@ class NewsItem {
     required this.isPublished,
     this.excerpt,
     this.readingTime,
+    this.tags = const [],
   });
 
   factory NewsItem.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,7 @@ class NewsItem {
         isPublished: _parseBool(json['is_published']) ?? false,
         excerpt: json['excerpt']?.toString(),
         readingTime: _parseInt(json['reading_time']),
+        tags: _parseTagsList(json['tags']),
       );
       
       print('=== Created NewsItem ===');
@@ -123,6 +126,23 @@ class NewsItem {
     } catch (e) {
       print('Error parsing author from $author (${author.runtimeType}): $e');
       return 'Unknown';
+    }
+  }
+
+  static List<String> _parseTagsList(dynamic tags) {
+    try {
+      if (tags == null) return [];
+      if (tags is List) {
+        return tags.map((tag) => tag.toString()).toList();
+      }
+      if (tags is String) {
+        // If it's a JSON string, try to parse it
+        return [];
+      }
+      return [];
+    } catch (e) {
+      print('Error parsing tags from $tags (${tags.runtimeType}): $e');
+      return [];
     }
   }
 }

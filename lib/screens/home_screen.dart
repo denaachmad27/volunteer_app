@@ -3,11 +3,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'bantuan_sosial_screen.dart';
 import 'news_screen.dart';
 import 'complaint_screen.dart';
+import 'aleg_dashboard_screen.dart';
+import 'relawan_warga_screen.dart';
 import '../services/auth_service.dart';
 import '../services/news_service.dart';
 import '../services/profile_completion_service.dart';
 import '../services/profile_service.dart';
 import '../services/legislative_service.dart';
+import '../services/relawan_service.dart';
 import '../widgets/reliable_network_image.dart';
 import '../widgets/profile_completion_card.dart';
 import '../widgets/legislative_member_card.dart';
@@ -36,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen>
   bool _profileDataLoading = true;
   LegislativeMember? _userLegislativeMember;
   bool _legislativeLoading = true;
+  int? _wargaCount;
+  bool _wargaCountLoading = false;
 
   @override
   void initState() {
@@ -87,10 +92,29 @@ class _HomeScreenState extends State<HomeScreen>
         _currentUser = user;
         _isLoading = false;
       });
+      // Load warga count if the user is relawan
+      await _loadRelawanWargaCount();
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadRelawanWargaCount() async {
+    final role = _currentUser?.role;
+    if (role != 'relawan' && role != 'user') return;
+    setState(() { _wargaCountLoading = true; });
+    try {
+      final page = await RelawanService.listWarga(page: 1, perPage: 1);
+      if (!mounted) return;
+      setState(() {
+        _wargaCount = page.total;
+        _wargaCountLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() { _wargaCountLoading = false; });
     }
   }
 
@@ -374,6 +398,17 @@ class _HomeScreenState extends State<HomeScreen>
                                     color: const Color(0xFFFF9800),
                                   ),
                                 ),
+                                if (_currentUser?.role == 'relawan' || _currentUser?.role == 'user') ...[
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildStatCard(
+                                      title: 'Warga',
+                                      value: _wargaCountLoading ? '...' : '${_wargaCount ?? 0}',
+                                      icon: Icons.groups_rounded,
+                                      color: const Color(0xFF009688),
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                             
@@ -411,6 +446,26 @@ class _HomeScreenState extends State<HomeScreen>
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.symmetric(horizontal: 4),
                                 children: [
+                                  // Aleg dashboard (only for aleg/admin_aleg)
+                                  if (_currentUser?.role == 'aleg' || _currentUser?.role == 'admin_aleg') ...[
+                                    _buildCompactServiceCard(
+                                      icon: Icons.dashboard_customize_rounded,
+                                      title: 'Dashboard Aleg',
+                                      color: const Color(0xFF795548),
+                                      onTap: () => _navigateToScreen(const AlegDashboardScreen()),
+                                    ),
+                                    const SizedBox(width: 16),
+                                  ],
+                                  // Relawan warga (only for relawan/user)
+                                  if (_currentUser?.role == 'relawan' || _currentUser?.role == 'user') ...[
+                                    _buildCompactServiceCard(
+                                      icon: Icons.groups_2_rounded,
+                                      title: 'Warga Binaan',
+                                      color: const Color(0xFF009688),
+                                      onTap: () => _navigateToScreen(const RelawanWargaScreen()),
+                                    ),
+                                    const SizedBox(width: 16),
+                                  ],
                                   _buildCompactServiceCard(
                                     icon: Icons.volunteer_activism_rounded,
                                     title: 'Bantuan Sosial',

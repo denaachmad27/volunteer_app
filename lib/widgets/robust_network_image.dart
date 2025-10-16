@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/api_service.dart';
 
 class RobustNetworkImage extends StatefulWidget {
   final String? imagePath;
@@ -50,13 +51,13 @@ class _RobustNetworkImageState extends State<RobustNetworkImage> {
       return;
     }
 
-    // Use 10.0.2.2:8000 with Laravel storage link path - single URL approach
+    // Use ApiService.storageUrl untuk menggunakan konfigurasi yang sama
     final cleanPath = path.startsWith('/') ? path.substring(1) : path;
 
     if (cleanPath.startsWith('news_images/')) {
-      _urlsToTry.add('http://10.0.2.2:8000/storage/$cleanPath');
+      _urlsToTry.add('${ApiService.storageUrl}/$cleanPath');
     } else {
-      _urlsToTry.add('http://10.0.2.2:8000/storage/news_images/$cleanPath');
+      _urlsToTry.add('${ApiService.storageUrl}/news_images/$cleanPath');
     }
 
     // Remove duplicates

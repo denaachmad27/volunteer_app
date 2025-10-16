@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/api_service.dart';
 
 class SimpleNetworkImage extends StatelessWidget {
   final String? imagePath;
@@ -21,17 +22,17 @@ class SimpleNetworkImage extends StatelessWidget {
 
   String? _getImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) return null;
-    
+
     if (imagePath.startsWith('http')) return imagePath;
-    
+
     final cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-    
-    // Use 10.0.2.2:8000 with Laravel storage link path
+
+    // Use ApiService.storageUrl untuk menggunakan konfigurasi yang sama
     if (cleanPath.startsWith('news_images/')) {
-      return 'http://10.0.2.2:8000/storage/$cleanPath';
+      return '${ApiService.storageUrl}/$cleanPath';
     }
-    
-    return 'http://10.0.2.2:8000/storage/news_images/$cleanPath';
+
+    return '${ApiService.storageUrl}/news_images/$cleanPath';
   }
 
   @override
