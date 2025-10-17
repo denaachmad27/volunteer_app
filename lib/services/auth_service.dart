@@ -177,7 +177,28 @@ class AuthService {
   // Check if user is logged in
   static Future<bool> isLoggedIn() async {
     final token = await ApiService.getToken();
-    return token != null;
+    if (token == null) return false;
+
+    // Verify token is still valid by calling backend
+    try {
+      final response = await ApiService.get('/auth/me');
+      final data = ApiService.parseResponse(response);
+
+      if (data['status'] == 'success' && data['user'] != null) {
+        // Token is valid, update user data
+        final user = User.fromJson(data['user']);
+        await _saveUser(user);
+        return true;
+      }
+
+      // Token invalid, clear auth data
+      await _clearAuthData();
+      return false;
+    } catch (e) {
+      // Token invalid or network error, clear auth data
+      await _clearAuthData();
+      return false;
+    }
   }
 
   // Logout user

@@ -77,8 +77,14 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
       final response = await AuthService.getAnggotaLegislatifOptions();
 
       if (response['status'] == 'success' && response['data'] != null) {
+        // Debug: Print first item to verify data structure
+        final dataList = List<Map<String, dynamic>>.from(response['data']);
+        if (dataList.isNotEmpty) {
+          print('DEBUG: First aleg data: ${dataList[0]}');
+        }
+
         setState(() {
-          _alegList = List<Map<String, dynamic>>.from(response['data']);
+          _alegList = dataList;
           _isLoading = false;
         });
       } else {
@@ -88,6 +94,7 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
         });
       }
     } catch (e) {
+      print('ERROR loading aleg: $e');
       setState(() {
         _errorMessage = 'Terjadi kesalahan: $e';
         _isLoading = false;
@@ -386,12 +393,22 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
                                                         ],
                                                 ),
                                                 borderRadius: BorderRadius.circular(12),
+                                                image: aleg['foto_profil'] != null
+                                                    ? DecorationImage(
+                                                        image: NetworkImage(
+                                                          '${ApiService.storageUrl}/${aleg['foto_profil']}',
+                                                        ),
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : null,
                                               ),
-                                              child: const Icon(
-                                                Icons.account_circle_rounded,
-                                                color: Colors.white,
-                                                size: 32,
-                                              ),
+                                              child: aleg['foto_profil'] == null
+                                                  ? const Icon(
+                                                      Icons.account_circle_rounded,
+                                                      color: Colors.white,
+                                                      size: 32,
+                                                    )
+                                                  : null,
                                             ),
                                             const SizedBox(width: 16),
 
@@ -401,7 +418,7 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    aleg['nama'] ?? '',
+                                                    aleg['nama_lengkap'] ?? '',
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight: FontWeight.w600,
@@ -412,7 +429,7 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
-                                                    '${aleg['partai'] ?? ''} • ${aleg['dapil'] ?? ''}',
+                                                    '${aleg['partai_politik'] ?? 'No Party'} • ${aleg['daerah_pemilihan'] ?? 'No Dapil'}',
                                                     style: TextStyle(
                                                       fontSize: 13,
                                                       color: Colors.grey[600],
