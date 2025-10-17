@@ -429,9 +429,20 @@ class _SelectAlegScreenState extends State<SelectAlegScreen>
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
+                                                    aleg['jabatan_saat_ini'] ?? '',
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[700],
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
                                                     '${aleg['partai_politik'] ?? 'No Party'} • ${aleg['daerah_pemilihan'] ?? 'No Dapil'}',
                                                     style: TextStyle(
-                                                      fontSize: 13,
+                                                      fontSize: 12,
                                                       color: Colors.grey[600],
                                                     ),
                                                   ),
