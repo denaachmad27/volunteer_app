@@ -216,7 +216,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
+          colors: [Color(0xFFFFA726), Color(0xFFFF6F00)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
@@ -733,12 +733,12 @@ class _DataSosialScreenState extends State<DataSosialScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: const Color(0xFFFFA726).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
                   Icons.psychology,
-                  color: Colors.purple,
+                  color: Color(0xFFFFA726),
                   size: 24,
                 ),
               ),
@@ -759,7 +759,7 @@ class _DataSosialScreenState extends State<DataSosialScreen>
           const SizedBox(height: 16),
           
           if (keahlian != null && keahlian.toString().isNotEmpty) ...[
-            _buildInfoRow(Icons.star, 'Keahlian Khusus', keahlian, Colors.purple),
+            _buildInfoRow(Icons.star, 'Keahlian Khusus', keahlian, const Color(0xFFFFA726)),
             const SizedBox(height: 12),
           ],
           

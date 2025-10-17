@@ -202,7 +202,7 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
+          colors: [Color(0xFFFFA726), Color(0xFFFF6F00)],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -451,12 +451,12 @@ class _SocialFormScreenState extends State<SocialFormScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: const Color(0xFFFFA726).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.psychology,
-                  color: Colors.purple,
+                  color: Color(0xFFFFA726),
                   size: 20,
                 ),
               ),

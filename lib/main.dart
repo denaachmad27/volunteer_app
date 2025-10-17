@@ -1,6 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -10,6 +13,8 @@ import 'screens/data_keluarga_screen.dart';
 import 'screens/data_ekonomi_screen.dart';
 import 'screens/data_sosial_screen.dart';
 import 'screens/legislative_member_detail_screen.dart';
+import 'screens/select_aleg_screen.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +37,34 @@ Future<void> main() async {
     } catch (e) {
       debugPrint('⚠️ No .env file found, using default values');
     }
+  }
+
+  // Inisialisasi Firebase sebelum menjalankan aplikasi
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('✅ Firebase initialized');
+
+    // IMPORTANT: Sign out from Firebase Auth AND Google Sign-In on app start
+    // This prevents auto-login from cached Firebase/Google session
+    // User must explicitly login through the app
+    await FirebaseAuth.instance.signOut();
+    debugPrint('✅ Firebase Auth signed out');
+
+    // Also sign out from Google Sign-In to ensure clean state
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      debugPrint('✅ Google Sign-In cleared');
+    } catch (e) {
+      debugPrint('⚠️ Google Sign-In clear skipped: $e');
+    }
+
+    debugPrint('✅ All auth services cleared - ensuring fresh login');
+  } catch (e, stackTrace) {
+    debugPrint('❌ Firebase initialization failed: $e\n$stackTrace');
+    rethrow;
   }
 
   runApp(VolunteerApp());
@@ -80,6 +113,17 @@ class VolunteerApp extends StatelessWidget {
         builder: (context, state) {
           final memberId = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
           return LegislativeMemberDetailScreen(memberId: memberId);
+        },
+      ),
+      GoRoute(
+        path: '/select-aleg',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return SelectAlegScreen(
+            email: extra['email'] as String,
+            name: extra['name'] as String,
+            googleId: extra['google_id'] as String,
+          );
         },
       ),
     ],

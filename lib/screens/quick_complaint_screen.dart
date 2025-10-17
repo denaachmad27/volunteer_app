@@ -62,7 +62,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
             end: Alignment.bottomRight,
             colors: [
               Color(0xFFff5001),
-              Color(0xFF764ba2),
+              Color(0xFFe64100),
             ],
           ),
         ),
@@ -145,7 +145,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
                                   gradient: const LinearGradient(
                                     colors: [
                                       Color(0xFFff5001),
-                                      Color(0xFF764ba2),
+                                      Color(0xFFe64100),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
@@ -622,7 +622,7 @@ class _QuickComplaintScreenState extends State<QuickComplaintScreen>
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFFff5001), Color(0xFF764ba2)],
+                  colors: [Color(0xFFff5001), Color(0xFFe64100)],
                   ),
                   borderRadius: BorderRadius.circular(0),
                 ),

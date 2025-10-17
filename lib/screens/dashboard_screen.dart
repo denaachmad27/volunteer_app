@@ -56,9 +56,9 @@ class _DashboardScreenState extends State<DashboardScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF6B73FF),
+              Color(0xFFFFA726),
+              Color(0xFFFF8C00),
+              Color(0xFFFF6F00),
             ],
           ),
         ),
@@ -149,14 +149,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFF667eea),
-                                    Color(0xFF764ba2),
+                                    Color(0xFFFFA726),
+                                    Color(0xFFFF6F00),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF667eea).withOpacity(0.3),
+                                    color: const Color(0xFFFFA726).withOpacity(0.3),
                                     blurRadius: 20,
                                     offset: const Offset(0, 10),
                                   ),
@@ -363,10 +363,10 @@ class _DashboardScreenState extends State<DashboardScreen>
             },
             child: const Text(
               'Cancel',
-              style: TextStyle(
-                color: Color(0xFF667eea),
-                fontWeight: FontWeight.w600,
-              ),
+                            style: TextStyle(
+                              color: Color(0xFFFFA726),
+                              fontWeight: FontWeight.w600,
+                            ),
             ),
           ),
           ElevatedButton(
@@ -375,7 +375,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               context.go('/login');
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
+              backgroundColor: const Color(0xFFFFA726),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

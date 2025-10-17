@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "825340640317",
+    "project_id": "loginwith-bad4d",
+    "storage_bucket": "loginwith-bad4d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825340640317:android:e4cfb78139a7616b04fe54",
+        "android_client_info": {
+          "package_name": "com.example.volunteer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825340640317-ob3dfhm12a7b3cbgs8344e5ll5e1ilrl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzDcXl-xlDKY9OFrRpHVZUi4lACOFeWXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825340640317-ob3dfhm12a7b3cbgs8344e5ll5e1ilrl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

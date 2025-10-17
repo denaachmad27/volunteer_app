@@ -228,7 +228,7 @@ class ComplaintService {
         };
       default:
         return {
-          'color': 0xFF667eea,
+          'color': 0xFFFFA726,
           'label': status,
           'icon': 'help_outline',
         };

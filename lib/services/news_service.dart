@@ -345,7 +345,7 @@ class NewsService {
       case 'Umum':
         return 0xFF607D8B;
       default:
-        return 0xFF667eea;
+        return 0xFFFFA726;
     }
   }
   

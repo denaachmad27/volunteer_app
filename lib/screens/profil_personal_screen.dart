@@ -286,7 +286,7 @@ class _ProfilPersonalScreenState extends State<ProfilPersonalScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
+          colors: [Color(0xFFFFA726), Color(0xFFFF6F00)],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [

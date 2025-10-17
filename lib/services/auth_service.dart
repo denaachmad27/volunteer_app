@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'google_sign_in_service.dart';
 import 'api_service.dart';
 
 class User {
@@ -189,6 +191,15 @@ class AuthService {
         } catch (e) {
           // Ignore API errors during logout, just clear local data
         }
+      }
+
+      // IMPORTANT: Sign out from Firebase Auth and Google Sign-In
+      // This ensures that cached credentials are cleared
+      try {
+        await FirebaseAuth.instance.signOut();
+        await GoogleSignInService.signOut();
+      } catch (e) {
+        // Ignore errors, continue with clearing local data
       }
 
       // Clear local storage

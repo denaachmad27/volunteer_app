@@ -132,8 +132,8 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFff5001),
-            Color(0xFF764ba2),
+            Color(0xFFFFA726),
+            Color(0xFFFF6F00),
           ],
         ),
       ),

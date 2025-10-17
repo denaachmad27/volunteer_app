@@ -67,7 +67,7 @@ class SimpleNetworkImage extends StatelessWidget {
           color: Colors.grey[200],
           child: const Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA726)),
             ),
           ),
         ),

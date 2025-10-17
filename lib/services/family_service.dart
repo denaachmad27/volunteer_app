@@ -231,7 +231,7 @@ class FamilyService {
     switch (hubungan.toLowerCase()) {
       case 'suami':
       case 'istri':
-        return const Color(0xFF667eea); // Primary
+        return const Color(0xFFFFA726); // Primary
       case 'anak':
         return const Color(0xFF10B981); // Green
       case 'orang tua':

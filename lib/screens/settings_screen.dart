@@ -112,15 +112,15 @@ class _SettingsScreenState extends State<SettingsScreen>
                           Container(
                             width: 60,
                             height: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Colors.white,
-                                  Color(0xFFE3F2FD),
-                                ],
-                              ),
-                              boxShadow: [
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Colors.white,
+                                    Color(0xFFFFF3E0),
+                                  ],
+                                ),
+                                boxShadow: [
                                 BoxShadow(
                                   color: Colors.white.withOpacity(0.3),
                                   blurRadius: 15,
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           gradient: LinearGradient(
                                             colors: [
                                               Colors.white,
-                                              Color(0xFFE3F2FD),
+                                              Color(0xFFFFF3E0),
                                             ],
                                           ),
                                         ),

@@ -59,6 +59,8 @@ class _SplashScreenState extends State<SplashScreen>
     await Future.delayed(const Duration(seconds: 3));
 
     // Check if user is already logged in
+    // IMPORTANT: Only check backend token, NOT Firebase auth state
+    // to prevent auto-login from cached Google account
     final isLoggedIn = await AuthService.isLoggedIn();
 
     if (mounted) {

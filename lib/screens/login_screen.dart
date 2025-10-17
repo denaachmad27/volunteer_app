@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
+import '../services/google_sign_in_service.dart';
+import '../services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen>
   
   bool _isPasswordVisible = false;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -109,6 +114,106 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           );
         }
+      }
+    }
+  }
+
+  void _handleGoogleSignIn() async {
+    if (_isLoading || _isGoogleLoading) return;
+
+    setState(() {
+      _isGoogleLoading = true;
+    });
+
+    try {
+      // Step 1: Sign in with Google to get Firebase credential
+      final credential = await GoogleSignInService.signInWithGoogle();
+
+      if (!mounted) return;
+
+      if (credential == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login Google dibatalkan.'),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Step 2: Get user info from Firebase
+      final firebaseUser = credential.user;
+      if (firebaseUser == null) {
+        throw Exception('Firebase user is null');
+      }
+
+      // Step 3: Check if user exists in backend
+      try {
+        final response = await ApiService.post('/auth/google-signin', {
+          'email': firebaseUser.email,
+          'name': firebaseUser.displayName ?? firebaseUser.email,
+          'google_id': firebaseUser.uid,
+        });
+
+        final data = ApiService.parseResponse(response);
+        final authResponse = AuthResponse.fromJson(data);
+
+        if (!mounted) return;
+
+        if (authResponse.success && authResponse.token != null) {
+          // Existing user - save token and go to home
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', authResponse.token!);
+          await prefs.setString('user', jsonEncode(authResponse.user!.toJson()));
+
+          if (mounted) {
+            final displayName = authResponse.user?.name ?? firebaseUser.email ?? '';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Selamat datang kembali, $displayName!'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            context.go('/home');
+          }
+        } else {
+          throw Exception(authResponse.message ?? 'Google sign-in failed');
+        }
+      } on Exception catch (e) {
+        // Check if this is a 404 error (new user)
+        if (e.toString().contains('404') || e.toString().contains('User not found')) {
+          // New user - redirect to select aleg screen
+          if (mounted) {
+            context.push('/select-aleg', extra: {
+              'email': firebaseUser.email,
+              'name': firebaseUser.displayName ?? firebaseUser.email,
+              'google_id': firebaseUser.uid,
+            });
+            return; // Don't show error
+          }
+        }
+        // Re-throw other errors
+        rethrow;
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal login dengan Google: $error'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+        });
       }
     }
   }
@@ -284,6 +389,56 @@ class _LoginScreenState extends State<LoginScreen>
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
                                               ),
+                                            ),
+                                    ),
+                                  ),
+                                  
+                                  const SizedBox(height: 16),
+                                  
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 56,
+                                    child: OutlinedButton(
+                                      onPressed: (_isLoading || _isGoogleLoading) ? null : _handleGoogleSignIn,
+                                      style: OutlinedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        side: BorderSide(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          width: 1.5,
+                                        ),
+                                        backgroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                      ),
+                                      child: _isGoogleLoading
+                                          ? const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4285F4)),
+                                              ),
+                                            )
+                                          : Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.asset(
+                                                  'assets/images/google_icon.png',
+                                                  width: 22,
+                                                  height: 22,
+                                                ),
+                                                const SizedBox(width: 12),
+                                                const Text(
+                                                  'Sign in with Google',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF2D3748),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                     ),
                                   ),

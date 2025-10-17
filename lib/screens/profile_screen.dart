@@ -65,8 +65,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
+              Color(0xFFFFA726),
+              Color(0xFFFF6F00),
             ],
           ),
         ),
@@ -144,13 +144,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           shape: BoxShape.circle,
                                           gradient: const LinearGradient(
                                             colors: [
-                                              Color(0xFF667eea),
-                                              Color(0xFF764ba2),
+                                              Color(0xFFFFA726),
+                                              Color(0xFFFF6F00),
                                             ],
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFF667eea).withOpacity(0.3),
+                                              color: const Color(0xFFFFA726).withOpacity(0.3),
                                               blurRadius: 15,
                                               offset: const Offset(0, 5),
                                             ),
@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                           child: const Icon(
                                             Icons.edit,
-                                            color: Color(0xFF667eea),
+                                            color: Color(0xFFFFA726),
                                             size: 16,
                                           ),
                                         ),
@@ -351,12 +351,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF667eea).withOpacity(0.1),
+            color: const Color(0xFFFFA726).withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
             icon,
-            color: const Color(0xFF667eea),
+            color: const Color(0xFFFFA726),
             size: 20,
           ),
         ),
@@ -415,7 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: const Text(
               'Batal',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFFFA726),
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -467,7 +467,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF667eea),
+                color: Color(0xFFFFA726),
               ),
             ),
             SizedBox(height: 8),
@@ -490,7 +490,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: const Text(
               'Tutup',
               style: TextStyle(
-                color: Color(0xFF667eea),
+                color: Color(0xFFFFA726),
                 fontWeight: FontWeight.w600,
               ),
             ),

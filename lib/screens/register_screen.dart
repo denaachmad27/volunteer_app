@@ -557,7 +557,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: const Row(
           children: [
-            Icon(Icons.person_outline, color: Color(0xFF667eea)),
+            Icon(Icons.person_outline, color: Color(0xFFFFA726)),
             SizedBox(width: 12),
             SizedBox(
               width: 16,

@@ -226,7 +226,7 @@ class _DataKeluargaScreenState extends State<DataKeluargaScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFff5001), Color(0xFF764ba2)],
+          colors: [Color(0xFFFFA726), Color(0xFFFF6F00)],
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),

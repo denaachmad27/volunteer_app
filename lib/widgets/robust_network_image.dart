@@ -111,7 +111,7 @@ class _RobustNetworkImageState extends State<RobustNetworkImage> {
               color: Colors.grey[200],
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA726)),
                 ),
               ),
             );
@@ -134,7 +134,7 @@ class _RobustNetworkImageState extends State<RobustNetworkImage> {
                 color: Colors.grey[200],
                 child: const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA726)),
                   ),
                 ),
               ),

@@ -115,9 +115,9 @@ class _ReliableNetworkImageState extends State<ReliableNetworkImage> {
           height: widget.height,
           color: Colors.grey[200],
           child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
-            ),
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA726)),
+          ),
           ),
         ),
       errorWidget: (context, url, error) {
@@ -140,7 +140,7 @@ class _ReliableNetworkImageState extends State<ReliableNetworkImage> {
               color: Colors.grey[200],
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFA726)),
                 ),
               ),
             );
