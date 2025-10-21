@@ -5,6 +5,8 @@ import 'news_screen.dart';
 import 'complaint_screen.dart';
 import 'aleg_dashboard_screen.dart';
 import 'relawan_warga_screen.dart';
+import 'reses_screen.dart';
+import 'pokir_screen.dart';
 import '../services/auth_service.dart';
 import '../services/news_service.dart';
 import '../services/profile_completion_service.dart';
@@ -485,6 +487,20 @@ class _HomeScreenState extends State<HomeScreen>
                                     title: 'Buat Pengaduan',
                                     color: const Color(0xFFFF9800),
                                     onTap: () => _navigateToScreen(const ComplaintScreen()),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildCompactServiceCard(
+                                    icon: Icons.event_note_rounded,
+                                    title: 'Reses',
+                                    color: const Color(0xFF00BCD4),
+                                    onTap: () => _navigateToScreen(const ResesScreen()),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  _buildCompactServiceCard(
+                                    icon: Icons.lightbulb_outline_rounded,
+                                    title: 'Pokir',
+                                    color: const Color(0xFF673AB7),
+                                    onTap: () => _navigateToScreen(const PokirScreen()),
                                   ),
                                   const SizedBox(width: 16),
                                   _buildCompactServiceCard(
