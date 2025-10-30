@@ -58,6 +58,7 @@ class User {
   }
 
   bool get isAdmin => role == 'admin';
+  bool get isAdminAleg => role == 'admin_aleg';
   bool get isUser => role == 'user';
 }
 

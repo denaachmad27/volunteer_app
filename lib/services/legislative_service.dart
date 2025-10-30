@@ -9,7 +9,7 @@ class LegislativeService {
   static Future<LegislativeResponse> getActiveLegislativeMembers() async {
     try {
       print('=== LEGISLATIVE SERVICE: Fetching active legislative members ===');
-      
+
       final response = await http.get(
         Uri.parse('$baseUrl/anggota-legislatif/options'),
         headers: {
@@ -30,6 +30,69 @@ class LegislativeService {
     } catch (e) {
       print('Error in getActiveLegislativeMembers: $e');
       throw Exception('Failed to load legislative members: $e');
+    }
+  }
+
+  // Get all legislative members for admin with pagination
+  static Future<Map<String, dynamic>> getAllLegislativeMembers({
+    int page = 1,
+    int limit = 100,
+    String? search,
+  }) async {
+    try {
+      print('=== LEGISLATIVE SERVICE: Fetching all legislative members for admin ===');
+
+      String endpoint = '/admin/anggota-legislatif?page=$page&limit=$limit';
+      if (search != null && search.isNotEmpty) {
+        endpoint += '&search=${Uri.encodeComponent(search)}';
+      }
+
+      final response = await ApiService.get(endpoint);
+      final data = ApiService.parseResponse(response);
+
+      print('Response status: ${response.statusCode}');
+      print('Response data keys: ${data.keys}');
+
+      if (data['status'] == 'success' && data['data'] != null) {
+        // Handle nested data structure from backend pagination
+        List<dynamic> itemsList = [];
+        Map<String, dynamic> metaData = {};
+
+        if (data['data'] is Map<String, dynamic>) {
+          // Backend returns nested structure: data.data contains the items
+          itemsList = data['data']['data'] as List<dynamic>? ?? [];
+          metaData = data['data'] as Map<String, dynamic>;
+          // Remove the actual items from meta to avoid confusion
+          metaData.remove('data');
+        } else if (data['data'] is List) {
+          // Fallback if backend returns direct list
+          itemsList = data['data'] as List<dynamic>;
+        }
+
+        final members = itemsList
+            .map((item) => LegislativeMember.fromAdminJson(item))
+            .toList();
+
+        return {
+          'success': true,
+          'data': members,
+          'meta': metaData,
+          'message': data['message'] ?? 'Legislative members loaded successfully'
+        };
+      } else {
+        return {
+          'success': false,
+          'data': <LegislativeMember>[],
+          'message': data['message'] ?? 'Failed to load legislative members'
+        };
+      }
+    } catch (e) {
+      print('Error in getAllLegislativeMembers: $e');
+      return {
+        'success': false,
+        'data': <LegislativeMember>[],
+        'message': 'Failed to load legislative members: $e'
+      };
     }
   }
 

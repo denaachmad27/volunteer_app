@@ -226,6 +226,96 @@ class NewsResponse {
 }
 
 class NewsService {
+  // Test endpoint - get all news without any filters
+  static Future<Map<String, dynamic>> getAllNewsTest() async {
+    const endpoint = '/admin/news/test';
+
+    print('=== NewsService Test Debug ===');
+    print('Endpoint: $endpoint');
+    print('Full URL: ${ApiService.baseUrl}$endpoint');
+
+    try {
+      final response = await ApiService.get(endpoint);
+      final data = ApiService.parseResponse(response);
+
+      print('Test Response Status: ${data['status']}');
+      if (data['data'] != null && data['data']['total'] != null) {
+        print('Total News: ${data['data']['total']}');
+        if (data['data']['news'] != null) {
+          print('News Count: ${data['data']['news'].length}');
+          print('First 3 Items:');
+          for (int i = 0; i < data['data']['news'].length && i < 3; i++) {
+            final item = data['data']['news'][i];
+            print('  Item ${i+1}: ${item['judul']} (id: ${item['id']}, aleg_id: ${item['anggota_legislatif_id']})');
+          }
+        }
+      }
+
+      return data;
+    } catch (e) {
+      print('Test API Error: $e');
+      return {'success': false, 'error': e.toString()};
+    }
+  }
+
+  // Get all news for admin (without id_aleg filter)
+  static Future<NewsResponse> getAllNewsForAdmin({
+    String? kategori,
+    String? search,
+    int page = 1,
+    int limit = 10,
+  }) async {
+    String endpoint = '/admin/news?page=$page&limit=$limit';
+
+    if (kategori != null && kategori.isNotEmpty && kategori != 'Semua') {
+      endpoint += '&kategori=${Uri.encodeComponent(kategori)}';
+    }
+
+    if (search != null && search.isNotEmpty) {
+      endpoint += '&search=${Uri.encodeComponent(search)}';
+    }
+
+    print('=== NewsService Admin Debug ===');
+    print('Endpoint: $endpoint');
+    print('Full URL: ${ApiService.baseUrl}$endpoint');
+
+    try {
+      final response = await ApiService.get(endpoint);
+      final data = ApiService.parseResponse(response);
+
+      print('Response Status: ${data['status']}');
+      print('Response Data Keys: ${data.keys}');
+      if (data['data'] != null) {
+        if (data['data'] is Map) {
+          print('Response Data Structure: Pagination');
+          print('Total Count: ${data['data']['total']}');
+          print('Current Page: ${data['data']['current_page']}');
+          if (data['data']['data'] != null) {
+            print('Items Count: ${data['data']['data'].length}');
+            print('First 3 Items:');
+            for (int i = 0; i < data['data']['data'].length && i < 3; i++) {
+              final item = data['data']['data'][i];
+              print('  Item ${i+1}: ${item['judul']} (id: ${item['id']}, aleg_id: ${item['anggota_legislatif_id']})');
+            }
+          }
+        } else if (data['data'] is List) {
+          print('Response Data Structure: Simple List');
+          print('Items Count: ${data['data'].length}');
+        }
+      }
+
+      return NewsResponse.fromJson(data);
+    } catch (e) {
+      print('Admin News API Error: $e');
+
+      return NewsResponse(
+        success: false,
+        data: [],
+        message: 'Gagal memuat berita admin: ${e.toString()}',
+      );
+    }
+  }
+
   // Get all published news (public endpoint)
   static Future<NewsResponse> getPublishedNews({
     String? kategori,
