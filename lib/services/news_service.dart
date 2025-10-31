@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'api_service.dart';
 
@@ -569,7 +570,7 @@ class NewsService {
         'konten': konten,
         'kategori': kategori,
         'is_published': isPublished ? '1' : '0',
-        'tags': tags.isNotEmpty ? tags.join(',') : '',
+        'tags': tags.isNotEmpty ? jsonEncode(tags) : '',
       };
 
       if (anggotaLegislatifId != null) {
@@ -627,7 +628,7 @@ class NewsService {
         'konten': konten,
         'kategori': kategori,
         'is_published': isPublished ? '1' : '0',
-        'tags': tags.isNotEmpty ? tags.join(',') : '',
+        'tags': tags.isNotEmpty ? jsonEncode(tags) : '',
         '_method': 'PUT', // Laravel method spoofing for multipart
       };
 
