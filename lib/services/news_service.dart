@@ -570,8 +570,12 @@ class NewsService {
         'konten': konten,
         'kategori': kategori,
         'is_published': isPublished ? '1' : '0',
-        'tags': tags.isNotEmpty ? jsonEncode(tags) : '',
       };
+
+      // Add tags only if not empty
+      if (tags.isNotEmpty) {
+        requestData['tags'] = jsonEncode(tags);
+      }
 
       if (anggotaLegislatifId != null) {
         requestData['anggota_legislatif_id'] = anggotaLegislatifId.toString();
@@ -628,9 +632,13 @@ class NewsService {
         'konten': konten,
         'kategori': kategori,
         'is_published': isPublished ? '1' : '0',
-        'tags': tags.isNotEmpty ? jsonEncode(tags) : '',
         '_method': 'PUT', // Laravel method spoofing for multipart
       };
+
+      // Add tags only if not empty
+      if (tags.isNotEmpty) {
+        requestData['tags'] = jsonEncode(tags);
+      }
 
       if (anggotaLegislatifId != null) {
         requestData['anggota_legislatif_id'] = anggotaLegislatifId.toString();

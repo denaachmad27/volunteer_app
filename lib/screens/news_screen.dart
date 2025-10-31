@@ -3,6 +3,7 @@ import '../services/news_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/reliable_network_image.dart';
 import 'add_news_screen.dart';
+import 'edit_news_screen.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -92,6 +93,20 @@ class _NewsScreenState extends State<NewsScreen> {
     );
 
     // Reload news if a new news was added
+    if (result == true) {
+      _loadNews();
+    }
+  }
+
+  Future<void> _navigateToEditNews(NewsItem news) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditNewsScreen(news: news),
+      ),
+    );
+
+    // Reload news if the news was updated
     if (result == true) {
       _loadNews();
     }
@@ -568,6 +583,28 @@ class _NewsScreenState extends State<NewsScreen> {
                           ),
                         ),
                       ),
+                      // Edit button for admin
+                      if (_currentUser != null && _currentUser!.isAdmin)
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: Material(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () => _navigateToEditNews(news),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                  color: Color(0xFFff5001),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       // Real image or placeholder
                       Positioned.fill(
                         child: ReliableNetworkImage(
