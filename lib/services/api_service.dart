@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -192,25 +193,87 @@ class ApiService {
   static Future<http.Response> delete(String endpoint) async {
     final headers = await getHeaders();
     final uri = Uri.parse('$baseUrl$endpoint');
-    
+
     const bool kEnableNetworkLogging = false;
     if (kEnableNetworkLogging) {
       print('=== API DELETE Request ===');
       print('URL: $uri');
     }
-    
+
     try {
       final response = await http.delete(
         uri,
         headers: headers,
       );
-      
+
       if (kEnableNetworkLogging) {
         print('=== API Response ===');
         print('Status: ${response.statusCode}');
         print('Body: ${response.body}');
       }
-      
+
+      return response;
+    } catch (e) {
+      if (kEnableNetworkLogging) {
+        print('=== API Error ===');
+        print('Error: $e');
+      }
+      throw Exception('Network error: $e');
+    }
+  }
+
+  // Multipart POST request (for file uploads)
+  static Future<http.Response> postMultipart(
+    String endpoint, {
+    required Map<String, String> data,
+    dynamic filePath,
+    String fileFieldName = 'file',
+  }) async {
+    final token = await getToken();
+    final uri = Uri.parse('$baseUrl$endpoint');
+
+    const bool kEnableNetworkLogging = false;
+    if (kEnableNetworkLogging) {
+      print('=== API Multipart POST Request ===');
+      print('URL: $uri');
+      print('Data: $data');
+      print('File: ${filePath != null ? 'Yes' : 'No'}');
+    }
+
+    try {
+      final request = http.MultipartRequest('POST', uri);
+
+      // Add headers
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      request.headers['Accept'] = 'application/json';
+
+      // Add fields
+      request.fields.addAll(data);
+
+      // Add file if provided
+      if (filePath != null) {
+        // Handle File object (mobile)
+        if (filePath is File) {
+          final file = await http.MultipartFile.fromPath(
+            fileFieldName,
+            filePath.path,
+          );
+          request.files.add(file);
+        }
+      }
+
+      // Send request
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (kEnableNetworkLogging) {
+        print('=== API Response ===');
+        print('Status: ${response.statusCode}');
+        print('Body: ${response.body}');
+      }
+
       return response;
     } catch (e) {
       if (kEnableNetworkLogging) {

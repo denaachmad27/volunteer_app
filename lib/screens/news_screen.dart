@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/news_service.dart';
+import '../services/auth_service.dart';
 import '../widgets/reliable_network_image.dart';
+import 'add_news_screen.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -16,13 +18,22 @@ class _NewsScreenState extends State<NewsScreen> {
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
-  
+  User? _currentUser;
+
   final List<String> _categories = NewsService.getCategories();
 
   @override
   void initState() {
     super.initState();
+    _loadCurrentUser();
     _loadNews();
+  }
+
+  Future<void> _loadCurrentUser() async {
+    final user = await AuthService.getCurrentUser();
+    setState(() {
+      _currentUser = user;
+    });
   }
 
   // Load news from API
@@ -72,6 +83,20 @@ class _NewsScreenState extends State<NewsScreen> {
     return _news; // Filtering is now done by the API
   }
 
+  Future<void> _navigateToAddNews() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AddNewsScreen(),
+      ),
+    );
+
+    // Reload news if a new news was added
+    if (result == true) {
+      _loadNews();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +112,20 @@ class _NewsScreenState extends State<NewsScreen> {
         backgroundColor: const Color(0xFFff5001),
         elevation: 0,
       ),
+      floatingActionButton: _currentUser != null && _currentUser!.isAdmin
+          ? FloatingActionButton.extended(
+              onPressed: _navigateToAddNews,
+              backgroundColor: const Color(0xFFff5001),
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text(
+                'Tambah Berita',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null,
       body: Column(
         children: [
           // Search Bar
@@ -695,175 +734,106 @@ class NewsDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 250,
-            pinned: true,
-            backgroundColor: const Color(0xFFff5001),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: ReliableNetworkImage(
-                imagePath: news.gambarUtama,
-                fit: BoxFit.cover,
-                placeholder: Container(
-                  color: const Color(0xFFff5001).withOpacity(0.1),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                ),
-                errorWidget: Container(
-                  color: const Color(0xFFff5001).withOpacity(0.1),
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.broken_image_outlined,
-                          size: 80,
-                          color: Color(0xFFff5001),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Gambar tidak dapat dimuat',
-                          style: TextStyle(
-                            color: Color(0xFFff5001),
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Periksa koneksi server',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: const Text(
+          'Detail Berita',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+        ),
+        backgroundColor: const Color(0xFFff5001),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Cover Image
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                child: SizedBox(
+                  height: 250,
+                  width: double.infinity,
+                  child: ReliableNetworkImage(
+                    imagePath: news.gambarUtama,
+                    fit: BoxFit.cover,
+                    placeholder: Container(
+                      color: const Color(0xFFff5001).withOpacity(0.1),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFff5001)),
+                        ),
+                      ),
+                    ),
+                    errorWidget: Container(
+                      color: const Color(0xFFff5001).withOpacity(0.1),
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.broken_image_outlined,
+                              size: 80,
+                              color: Color(0xFFff5001),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Gambar tidak dapat dimuat',
+                              style: TextStyle(
+                                color: Color(0xFFff5001),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
+
+              // Content Container
+              Padding(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Color(NewsService.getCategoryColor(news.kategori)).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        news.kategori,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(NewsService.getCategoryColor(news.kategori)),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 16),
-                    
                     // Title
                     Text(
                       news.judul,
                       style: const TextStyle(
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF2D3748),
                         height: 1.3,
                       ),
                     ),
-                    
-                    const SizedBox(height: 16),
-                    
-                    // Meta information
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person_outline,
-                          size: 18,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          news.author ?? 'Unknown',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Icon(
-                          Icons.calendar_today_outlined,
-                          size: 18,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          NewsService.formatDate(news.tanggalPublikasi),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.visibility_outlined,
-                              size: 18,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              news.views.toString(),
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    
+
                     const SizedBox(height: 16),
 
-                    // Tags
+                    // Tags Chips Row
                     if (news.tags.isNotEmpty)
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: news.tags.map((tag) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: const Color(0xFFff5001).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                 color: const Color(0xFFff5001).withOpacity(0.3),
                                 width: 1,
@@ -877,13 +847,13 @@ class NewsDetailScreen extends StatelessWidget {
                                   size: 14,
                                   color: Color(0xFFff5001),
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 6),
                                 Text(
                                   tag,
                                   style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     color: Color(0xFFff5001),
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -892,30 +862,91 @@ class NewsDetailScreen extends StatelessWidget {
                         }).toList(),
                       ),
 
+                    if (news.tags.isNotEmpty) const SizedBox(height: 16),
+
+                    // Meta Info Row
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person_outline,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          news.author ?? 'Unknown',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          NewsService.formatDate(news.tanggalPublikasi),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Category Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Color(NewsService.getCategoryColor(news.kategori)).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.bookmark,
+                            size: 14,
+                            color: Color(NewsService.getCategoryColor(news.kategori)),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            news.kategori,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(NewsService.getCategoryColor(news.kategori)),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
                     const SizedBox(height: 24),
 
-                    const Divider(),
-
-                    const SizedBox(height: 24),
-
-                    // Content
+                    // Content Text
                     Text(
                       news.konten,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFF2D3748),
-                        height: 1.6,
+                        height: 1.7,
                       ),
+                      textAlign: TextAlign.justify,
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
-                    // Share button
+
+                    // Share Button
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          // Handle share functionality
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Fitur berbagi akan segera tersedia'),
@@ -924,7 +955,7 @@ class NewsDetailScreen extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.share_outlined),
-                        label: const Text('Bagikan Artikel'),
+                        label: const Text('Bagikan Berita'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: const Color(0xFFff5001),
                           side: const BorderSide(color: Color(0xFFff5001)),
@@ -935,19 +966,15 @@ class NewsDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
-  }
-
-
-  String _formatDate(String dateString) {
-    final date = DateTime.parse(dateString);
-    return '${date.day}/${date.month}/${date.year}';
   }
 }

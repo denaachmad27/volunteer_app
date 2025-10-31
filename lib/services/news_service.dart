@@ -526,9 +526,9 @@ class NewsService {
       'http://localhost:8000',
       'http://127.0.0.1:8000',
     ];
-    
+
     Map<String, String> results = {};
-    
+
     for (final server in servers) {
       try {
         print('=== Testing Server: $server ===');
@@ -542,7 +542,166 @@ class NewsService {
         print('✗ $server - Error: $e');
       }
     }
-    
+
     return results;
   }
+
+  // Create news (Admin only)
+  static Future<NewsCreateResponse> createNews({
+    required String judul,
+    required String konten,
+    required String kategori,
+    bool isPublished = false,
+    List<String> tags = const [],
+    dynamic gambarUtama, // Can be File (mobile) or String (web)
+    int? anggotaLegislatifId,
+  }) async {
+    try {
+      print('=== Creating News ===');
+      print('Judul: $judul');
+      print('Kategori: $kategori');
+      print('Is Published: $isPublished');
+      print('Tags: $tags');
+      print('Has Image: ${gambarUtama != null}');
+
+      final Map<String, String> requestData = {
+        'judul': judul,
+        'konten': konten,
+        'kategori': kategori,
+        'is_published': isPublished ? '1' : '0',
+        'tags': tags.isNotEmpty ? tags.join(',') : '',
+      };
+
+      if (anggotaLegislatifId != null) {
+        requestData['anggota_legislatif_id'] = anggotaLegislatifId.toString();
+      }
+
+      final response = await ApiService.postMultipart(
+        '/admin/news',
+        data: requestData,
+        filePath: gambarUtama,
+        fileFieldName: 'gambar_utama',
+      );
+
+      final data = ApiService.parseResponse(response);
+
+      print('Create News Response: ${data['status']}');
+
+      if (data['status'] == 'success') {
+        return NewsCreateResponse(
+          success: true,
+          message: data['message'] ?? 'Berita berhasil dibuat',
+          data: data['data'] != null ? NewsItem.fromJson(data['data']) : null,
+        );
+      } else {
+        return NewsCreateResponse(
+          success: false,
+          message: data['message'] ?? 'Gagal membuat berita',
+        );
+      }
+    } catch (e) {
+      print('Create News Error: $e');
+      return NewsCreateResponse(
+        success: false,
+        message: 'Terjadi kesalahan: $e',
+      );
+    }
+  }
+
+  // Update news (Admin only)
+  static Future<NewsCreateResponse> updateNews({
+    required int id,
+    required String judul,
+    required String konten,
+    required String kategori,
+    bool isPublished = false,
+    List<String> tags = const [],
+    dynamic gambarUtama,
+    int? anggotaLegislatifId,
+  }) async {
+    try {
+      print('=== Updating News $id ===');
+
+      final Map<String, String> requestData = {
+        'judul': judul,
+        'konten': konten,
+        'kategori': kategori,
+        'is_published': isPublished ? '1' : '0',
+        'tags': tags.isNotEmpty ? tags.join(',') : '',
+        '_method': 'PUT', // Laravel method spoofing for multipart
+      };
+
+      if (anggotaLegislatifId != null) {
+        requestData['anggota_legislatif_id'] = anggotaLegislatifId.toString();
+      }
+
+      final response = await ApiService.postMultipart(
+        '/admin/news/$id',
+        data: requestData,
+        filePath: gambarUtama,
+        fileFieldName: 'gambar_utama',
+      );
+
+      final data = ApiService.parseResponse(response);
+
+      if (data['status'] == 'success') {
+        return NewsCreateResponse(
+          success: true,
+          message: data['message'] ?? 'Berita berhasil diupdate',
+          data: data['data'] != null ? NewsItem.fromJson(data['data']) : null,
+        );
+      } else {
+        return NewsCreateResponse(
+          success: false,
+          message: data['message'] ?? 'Gagal mengupdate berita',
+        );
+      }
+    } catch (e) {
+      print('Update News Error: $e');
+      return NewsCreateResponse(
+        success: false,
+        message: 'Terjadi kesalahan: $e',
+      );
+    }
+  }
+
+  // Delete news (Admin only)
+  static Future<NewsCreateResponse> deleteNews(int id) async {
+    try {
+      print('=== Deleting News $id ===');
+
+      final response = await ApiService.delete('/admin/news/$id');
+      final data = ApiService.parseResponse(response);
+
+      if (data['status'] == 'success') {
+        return NewsCreateResponse(
+          success: true,
+          message: data['message'] ?? 'Berita berhasil dihapus',
+        );
+      } else {
+        return NewsCreateResponse(
+          success: false,
+          message: data['message'] ?? 'Gagal menghapus berita',
+        );
+      }
+    } catch (e) {
+      print('Delete News Error: $e');
+      return NewsCreateResponse(
+        success: false,
+        message: 'Terjadi kesalahan: $e',
+      );
+    }
+  }
+}
+
+class NewsCreateResponse {
+  final bool success;
+  final String message;
+  final NewsItem? data;
+
+  NewsCreateResponse({
+    required this.success,
+    required this.message,
+    this.data,
+  });
 }
