@@ -783,6 +783,32 @@ class NewsDetailScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFff5001),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          // Edit button for admin
+          FutureBuilder<User?>(
+            future: AuthService.getCurrentUser(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data!.isAdmin) {
+                return IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.white),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditNewsScreen(news: news),
+                      ),
+                    );
+                    // Refresh if updated
+                    if (result == true && context.mounted) {
+                      Navigator.pop(context, true);
+                    }
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
